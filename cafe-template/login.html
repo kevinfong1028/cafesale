@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>管理者登入 - Bean & Brew</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Login Page Specific Styles */
+    .login-container {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, rgba(93, 112, 82, 0.05) 0%, rgba(193, 140, 93, 0.05) 100%);
+    }
+
+    .login-card {
+      background: white;
+      border-radius: 16px;
+      border: 1px solid var(--border-gray);
+      padding: 3rem;
+      max-width: 420px;
+      width: 100%;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    @media (max-width: 576px) {
+      .login-card {
+        padding: 2rem;
+        margin: 1rem;
+      }
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .login-header .logo {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .login-header h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--moss-green);
+      margin-bottom: 0.5rem;
+    }
+
+    .login-header p {
+      color: #999;
+      font-size: 0.9375rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      font-weight: 600;
+      color: var(--dark-text);
+      margin-bottom: 0.625rem;
+      display: block;
+      font-size: 0.9375rem;
+    }
+
+    .form-control {
+      border: 1px solid var(--border-gray);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-size: 0.9375rem;
+      transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+      border-color: var(--moss-green);
+      box-shadow: 0 0 0 3px rgba(93, 112, 82, 0.1);
+    }
+
+    .form-control::placeholder {
+      color: #ccc;
+    }
+
+    .remember-me {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      font-size: 0.875rem;
+    }
+
+    .remember-me input[type="checkbox"] {
+      cursor: pointer;
+      width: 18px;
+      height: 18px;
+      accent-color: var(--moss-green);
+    }
+
+    .remember-me label {
+      cursor: pointer;
+      margin: 0;
+      color: var(--dark-text);
+      font-weight: 500;
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 0.875rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 8px;
+      border: none;
+      background-color: var(--moss-green);
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-bottom: 1rem;
+    }
+
+    .login-btn:hover {
+      background-color: #4a5540;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(93, 112, 82, 0.3);
+    }
+
+    .login-btn:active {
+      transform: translateY(0);
+    }
+
+    .forgot-password {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .forgot-password a {
+      color: var(--moss-green);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    .forgot-password a:hover {
+      color: var(--terracotta);
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      margin: 2rem 0;
+      gap: 1rem;
+      color: #ccc;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background-color: var(--border-gray);
+    }
+
+    .divider span {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #999;
+      text-transform: uppercase;
+    }
+
+    .signup-link {
+      text-align: center;
+      font-size: 0.875rem;
+      color: #666;
+    }
+
+    .signup-link a {
+      color: var(--moss-green);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .signup-link a:hover {
+      color: var(--terracotta);
+    }
+
+    .error-message {
+      background-color: #ffebee;
+      color: #c62828;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      font-size: 0.875rem;
+      display: none;
+    }
+
+    .error-message.show {
+      display: block;
+    }
+
+    .success-message {
+      background-color: #e8f5e9;
+      color: #2e7d32;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      font-size: 0.875rem;
+      display: none;
+    }
+
+    .success-message.show {
+      display: block;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1.5rem;
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-gray);
+    }
+
+    @media (max-width: 576px) {
+      .features {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .feature-item {
+      text-align: center;
+    }
+
+    .feature-item .icon {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .feature-item .title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--moss-green);
+      text-transform: uppercase;
+    }
+
+    .feature-item .description {
+      font-size: 0.7rem;
+      color: #999;
+      margin-top: 0.25rem;
+    }
+  </style>
+</head>
+<body>
+  <div className="login-container">
+    <div className="login-card">
+      <!-- Header -->
+      <div className="login-header">
+        <div className="logo">☕</div>
+        <h1>Bean & Brew</h1>
+        <p>管理者登入</p>
+      </div>
+
+      <!-- Messages -->
+      <div className="error-message" id="errorMessage"></div>
+      <div className="success-message" id="successMessage"></div>
+
+      <!-- Login Form -->
+      <form id="loginForm">
+        <!-- Email Field -->
+        <div className="form-group">
+          <label for="email">電子郵件</label>
+          <input 
+            type="email" 
+            className="form-control" 
+            id="email" 
+            name="email"
+            placeholder="請輸入電子郵件"
+            required
+          >
+        </div>
+
+        <!-- Password Field -->
+        <div className="form-group">
+          <label for="password">密碼</label>
+          <input 
+            type="password" 
+            className="form-control" 
+            id="password" 
+            name="password"
+            placeholder="請輸入密碼"
+            required
+          >
+        </div>
+
+        <!-- Remember Me -->
+        <div className="remember-me">
+          <input 
+            type="checkbox" 
+            id="rememberMe" 
+            name="rememberMe"
+          >
+          <label for="rememberMe">記住我</label>
+        </div>
+
+        <!-- Login Button -->
+        <button type="submit" className="login-btn">登入</button>
+
+        <!-- Forgot Password -->
+        <div className="forgot-password">
+          <a href="#forgot">忘記密碼？</a>
+        </div>
+      </form>
+
+      <!-- Divider -->
+      <div className="divider">
+        <span>或</span>
+      </div>
+
+      <!-- Demo Info -->
+      <div style="background-color: #F5F3F0; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; font-size: 0.8125rem; color: #666; line-height: 1.6;">
+        <strong style="color: var(--moss-green);">測試帳號：</strong><br>
+        Email: admin@beanbrew.com<br>
+        Password: admin123
+      </div>
+
+      <!-- Features -->
+      <div className="features">
+        <div className="feature-item">
+          <div className="icon">📊</div>
+          <div className="title">儀表板</div>
+          <div className="description">實時銷售數據</div>
+        </div>
+        <div className="feature-item">
+          <div className="icon">📦</div>
+          <div className="title">商品管理</div>
+          <div className="description">庫存控制</div>
+        </div>
+        <div className="feature-item">
+          <div className="icon">📋</div>
+          <div className="title">訂單管理</div>
+          <div className="description">追蹤訂單</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    const loginForm = document.getElementById('loginForm');
+    const errorMessage = document.getElementById('errorMessage');
+    const successMessage = document.getElementById('successMessage');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+
+    // Demo credentials
+    const DEMO_EMAIL = 'admin@beanbrew.com';
+    const DEMO_PASSWORD = 'admin123';
+
+    loginForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const email = emailInput.value.trim();
+      const password = passwordInput.value.trim();
+      const rememberMe = document.getElementById('rememberMe').checked;
+
+      // Clear previous messages
+      errorMessage.classList.remove('show');
+      successMessage.classList.remove('show');
+
+      // Validation
+      if (!email || !password) {
+        showError('請填寫所有欄位');
+        return;
+      }
+
+      if (!isValidEmail(email)) {
+        showError('請輸入有效的電子郵件');
+        return;
+      }
+
+      // Simulate login
+      if (email === DEMO_EMAIL && password === DEMO_PASSWORD) {
+        // Save login state
+        if (rememberMe) {
+          localStorage.setItem('adminEmail', email);
+          localStorage.setItem('adminRememberMe', 'true');
+        }
+
+        showSuccess('登入成功！正在轉向...');
+        
+        // Redirect after 1.5 seconds
+        setTimeout(() => {
+          window.location.href = 'admin-dashboard.html';
+        }, 1500);
+      } else {
+        showError('電子郵件或密碼不正確');
+        passwordInput.value = '';
+      }
+    });
+
+    function isValidEmail(email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    }
+
+    function showError(message) {
+      errorMessage.textContent = message;
+      errorMessage.classList.add('show');
+    }
+
+    function showSuccess(message) {
+      successMessage.textContent = message;
+      successMessage.classList.add('show');
+    }
+
+    // Auto-fill demo credentials on page load
+    window.addEventListener('load', function() {
+      const savedEmail = localStorage.getItem('adminEmail');
+      if (savedEmail) {
+        emailInput.value = savedEmail;
+        document.getElementById('rememberMe').checked = true;
+      }
+    });
+
+    // Clear error message when user starts typing
+    emailInput.addEventListener('input', function() {
+      if (errorMessage.classList.contains('show')) {
+        errorMessage.classList.remove('show');
+      }
+    });
+
+    passwordInput.addEventListener('input', function() {
+      if (errorMessage.classList.contains('show')) {
+        errorMessage.classList.remove('show');
+      }
+    });
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>購物車 - Bean & Brew</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Header & Navigation -->
+  <header className="sticky-top">
+    <nav className="navbar navbar-expand-lg navbar-light bg-white">
+      <div className="container-fluid">
+        <a className="navbar-brand" href="index.html">Bean & Brew</a>
+        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span className="navbar-toggler-icon"></span>
+        </button>
+        <div className="collapse navbar-collapse" id="navbarNav">
+          <ul className="navbar-nav ms-auto">
+            <li className="nav-item">
+              <a className="nav-link" href="index.html">首頁</a>
+            </li>
+            <li className="nav-item">
+              <a className="nav-link" href="about.html">關於我們</a>
+            </li>
+            <li className="nav-item">
+              <a className="nav-link" href="products.html">產品</a>
+            </li>
+            <li className="nav-item">
+              <a className="nav-link" href="contact.html">聯絡我們</a>
+            </li>
+          </ul>
+          <div className="d-flex align-items-center ms-3">
+            <a href="cart.html" className="cart-icon">
+              🛒
+              <span className="cart-count">3</span>
+            </a>
+            <button className="btn btn-primary btn-sm ms-2">管理登入</button>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Page Header -->
+  <section style="background: linear-gradient(135deg, rgba(93, 112, 82, 0.1) 0%, rgba(193, 140, 93, 0.05) 100%); padding: 2.5rem 0;">
+    <div className="container">
+      <h1 className="h2 fw-bold">購物車</h1>
+    </div>
+  </section>
+
+  <!-- Cart Content -->
+  <div className="container py-5">
+    <div className="row g-4">
+      <!-- Cart Items -->
+      <div className="col-lg-8">
+        <div className="cart-items">
+          <h2 className="h5 fw-bold mb-4">購物車內容</h2>
+
+          <!-- Item 1 -->
+          <div className="cart-item">
+            <div className="cart-item-image">☕</div>
+            <div className="cart-item-details">
+              <h3 className="h6 fw-bold">衣索比亞 耶加雪菲</h3>
+              <p className="text-muted small">200g / 淺烘焙</p>
+            </div>
+            <div className="text-end">
+              <div className="cart-item-price">NT$ 680</div>
+              <div className="text-muted small mb-2">數量: 1</div>
+              <span className="cart-item-remove">✕</span>
+            </div>
+          </div>
+
+          <!-- Item 2 -->
+          <div className="cart-item">
+            <div className="cart-item-image">☕</div>
+            <div className="cart-item-details">
+              <h3 className="h6 fw-bold">哥倫比亞 薇拉</h3>
+              <p className="text-muted small">200g / 中烘焙</p>
+            </div>
+            <div className="text-end">
+              <div className="cart-item-price">NT$ 620</div>
+              <div className="text-muted small mb-2">數量: 2</div>
+              <span className="cart-item-remove">✕</span>
+            </div>
+          </div>
+
+          <!-- Item 3 -->
+          <div className="cart-item">
+            <div className="cart-item-image">☕</div>
+            <div className="cart-item-details">
+              <h3 className="h6 fw-bold">肯亞 AA 頂級</h3>
+              <p className="text-muted small">200g / 中深烘焙</p>
+            </div>
+            <div className="text-end">
+              <div className="cart-item-price">NT$ 780</div>
+              <div className="text-muted small mb-2">數量: 1</div>
+              <span className="cart-item-remove">✕</span>
+            </div>
+          </div>
+
+          <div className="text-center py-4">
+            <a href="products.html"><button className="btn btn-secondary">繼續購物</button></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cart Summary -->
+      <div className="col-lg-4">
+        <div className="cart-summary">
+          <h2 className="h5 fw-bold mb-4">訂單摘要</h2>
+          
+          <div className="summary-row">
+            <span>小計</span>
+            <span>NT$ 2,700</span>
+          </div>
+          <div className="summary-row">
+            <span>運費</span>
+            <span>NT$ 100</span>
+          </div>
+          <div className="summary-row">
+            <span>稅金</span>
+            <span>NT$ 280</span>
+          </div>
+          <div className="summary-row total">
+            <span>合計</span>
+            <span>NT$ 3,080</span>
+          </div>
+
+          <button className="btn btn-primary w-100 mt-3">進行結帳</button>
+        </div>
+
+        <!-- Promo Code -->
+        <div className="card mt-3 border-1">
+          <div className="card-body">
+            <h3 className="h6 fw-bold mb-3">優惠代碼</h3>
+            <div className="input-group">
+              <input type="text" className="form-control" placeholder="輸入優惠代碼">
+              <button className="btn btn-secondary">套用</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Checkout Form -->
+  <div className="container py-5">
+    <div className="checkout-form">
+      <h2 className="h4 fw-bold mb-4">收貨資訊</h2>
+
+      <!-- Personal Info -->
+      <h3 className="h6 fw-bold mb-3">個人資訊</h3>
+      <div className="row g-3 mb-4">
+        <div className="col-md-6">
+          <label className="form-label">姓名 *</label>
+          <input type="text" className="form-control" placeholder="請輸入姓名" required>
+        </div>
+        <div className="col-md-6">
+          <label className="form-label">電子郵件 *</label>
+          <input type="email" className="form-control" placeholder="請輸入電子郵件" required>
+        </div>
+      </div>
+
+      <div className="mb-4">
+        <label className="form-label">電話號碼 *</label>
+        <input type="tel" className="form-control" placeholder="請輸入電話號碼" required>
+      </div>
+
+      <!-- Shipping Address -->
+      <h3 className="h6 fw-bold mb-3 mt-5">收貨地址</h3>
+      
+      <div className="row g-3 mb-4">
+        <div className="col-md-6">
+          <label className="form-label">縣市 *</label>
+          <select className="form-select" required>
+            <option>請選擇縣市</option>
+            <option>台北市</option>
+            <option>新北市</option>
+            <option>桃園市</option>
+            <option>台中市</option>
+            <option>台南市</option>
+            <option>高雄市</option>
+          </select>
+        </div>
+        <div className="col-md-6">
+          <label className="form-label">鄉鎮區 *</label>
+          <input type="text" className="form-control" placeholder="請輸入鄉鎮區" required>
+        </div>
+      </div>
+
+      <div className="mb-4">
+        <label className="form-label">詳細地址 *</label>
+        <input type="text" className="form-control" placeholder="請輸入街道地址" required>
+      </div>
+
+      <!-- Shipping Method -->
+      <h3 className="h6 fw-bold mb-3 mt-5">配送方式</h3>
+      
+      <div className="mb-4">
+        <div className="form-check">
+          <input className="form-check-input" type="radio" name="shipping" id="shipping1" checked>
+          <label className="form-check-label" for="shipping1">
+            宅配到府 (NT$ 100)
+          </label>
+        </div>
+        <div className="form-check">
+          <input className="form-check-input" type="radio" name="shipping" id="shipping2">
+          <label className="form-check-label" for="shipping2">
+            超商取貨 (NT$ 60)
+          </label>
+        </div>
+      </div>
+
+      <!-- Payment Method -->
+      <h3 className="h6 fw-bold mb-3 mt-5">付款方式</h3>
+      
+      <div className="mb-4">
+        <div className="form-check">
+          <input className="form-check-input" type="radio" name="payment" id="payment1" checked>
+          <label className="form-check-label" for="payment1">
+            信用卡
+          </label>
+        </div>
+        <div className="form-check">
+          <input className="form-check-input" type="radio" name="payment" id="payment2">
+          <label className="form-check-label" for="payment2">
+            銀行轉帳
+          </label>
+        </div>
+        <div className="form-check">
+          <input className="form-check-input" type="radio" name="payment" id="payment3">
+          <label className="form-check-label" for="payment3">
+            貨到付款
+          </label>
+        </div>
+      </div>
+
+      <!-- Notes -->
+      <div className="mb-4">
+        <label className="form-label">備註</label>
+        <textarea className="form-control" placeholder="如有特殊需求，請在此說明" rows="4"></textarea>
+      </div>
+
+      <!-- Terms -->
+      <div className="form-check mb-4">
+        <input className="form-check-input" type="checkbox" id="terms">
+        <label className="form-check-label" for="terms">
+          我已閱讀並同意 <a href="#" className="text-decoration-none">服務條款</a> 和 <a href="#" className="text-decoration-none">隱私政策</a>
+        </label>
+      </div>
+
+      <!-- Submit Button -->
+      <button className="btn btn-primary btn-lg w-100">完成訂單</button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div className="container">
+      <div className="row g-4 mb-4">
+        <div className="col-md-6 col-lg-3">
+          <h5>Bean & Brew</h5>
+          <p className="small" style="line-height: 1.8;">
+            致力於帶給咖啡愛好者最純粹的精品咖啡體驗。
+          </p>
+        </div>
+        <div className="col-md-6 col-lg-3">
+          <h5>快速連結</h5>
+          <ul className="list-unstyled small">
+            <li><a href="index.html">首頁</a></li>
+            <li><a href="products.html">產品</a></li>
+            <li><a href="about.html">關於我們</a></li>
+            <li><a href="contact.html">聯絡我們</a></li>
+          </ul>
+        </div>
+        <div className="col-md-6 col-lg-3">
+          <h5>聯絡方式</h5>
+          <ul className="list-unstyled small">
+            <li>📧 info@beanbrew.com</li>
+            <li>📱 (02) 1234-5678</li>
+            <li>📍 台北市中山區</li>
+          </ul>
+        </div>
+        <div className="col-md-6 col-lg-3">
+          <h5>追蹤我們</h5>
+          <ul className="list-unstyled small">
+            <li><a href="#">Facebook</a></li>
+            <li><a href="#">Instagram</a></li>
+            <li><a href="#">Twitter</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div className="footer-bottom">
+      <p>&copy; 2024 Bean & Brew. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

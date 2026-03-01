@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>商品管理 - Bean & Brew 後台</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div className="admin-container">
+    <!-- Sidebar -->
+    <aside className="admin-sidebar">
+      <div className="logo">☕ Bean & Brew</div>
+      <ul>
+        <li><a href="admin-dashboard.html">📊 銷售儀表板</a></li>
+        <li><a href="admin-products.html" className="active">📦 商品管理</a></li>
+        <li><a href="admin-orders.html">📋 訂單管理</a></li>
+        <li><a href="index.html">🏠 返回前台</a></li>
+        <li style="margin-top: 2rem; border-top: 1px solid rgba(255, 255, 255, 0.2); padding-top: 2rem;">
+          <button className="btn btn-secondary w-100" style="background-color: var(--terracotta); border: none;">
+            登出
+          </button>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main className="admin-main">
+      <!-- Header -->
+      <div className="admin-header">
+        <div>
+          <h1 className="h3 fw-bold mb-0">商品管理</h1>
+          <p className="text-muted small mb-0">管理所有咖啡豆產品</p>
+        </div>
+        <button className="btn btn-primary">+ 新增商品</button>
+      </div>
+
+      <!-- Filter Section -->
+      <div className="admin-section mb-4">
+        <div className="row g-3">
+          <div className="col-12 col-md-6">
+            <input type="text" className="form-control" placeholder="搜尋商品名稱...">
+          </div>
+          
+          <div className="col-12 col-md-6">
+            <select className="form-select">
+              <option>全部分類</option>
+              <option>衣索比亞</option>
+              <option>哥倫比亞</option>
+              <option>肯亞</option>
+              <option>瓜地馬拉</option>
+              <option>巴西</option>
+              <option>巴拿馬</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Products Table -->
+      <div className="admin-section">
+        <div className="section-header">
+          <h2 className="h5 fw-bold mb-0">商品列表</h2>
+          <span className="text-muted small">共 6 款商品</span>
+        </div>
+
+        <div className="table-responsive mt-3">
+          <table className="admin-table">
+            <thead>
+              <tr>
+                <th>商品</th>
+                <th>產地</th>
+                <th>烘焙度</th>
+                <th>售價</th>
+                <th>庫存</th>
+                <th>銷售量</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Product 1 -->
+              <tr>
+                <td>
+                  <div className="d-flex align-items-center gap-2">
+                    <div style="width: 50px; height: 50px; background-color: var(--light-gray); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 24px;">☕</div>
+                    <div>
+                      <strong className="d-block">衣索比亞 耶加雪菲</strong>
+                      <small className="text-muted">熱銷</small>
+                    </div>
+                  </div>
+                </td>
+                <td>衣索比亞</td>
+                <td>淺烘焙</td>
+                <td>NT$ 680</td>
+                <td><span className="badge bg-success">50 包</span></td>
+                <td>42</td>
+                <td>
+                  <div className="action-buttons">
+                    <button className="btn btn-primary btn-sm">編輯</button>
+                    <button className="btn btn-danger btn-sm">刪除</button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Product 2 -->
+              <tr>
+                <td>
+                  <div className="d-flex align-items-center gap-2">
+                    <div style="width: 50px; height: 50px; background-color: var(--light-gray); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 24px;">☕</div>
+                    <div>
+                      <strong className="d-block">哥倫比亞 薇拉</strong>
+                      <small className="text-muted">新品</small>
+                    </div>
+                  </div>
+                </td>
+                <td>哥倫比亞</td>
+                <td>中烘焙</td>
+                <td>NT$ 620</td>
+                <td><span className="badge bg-success">35 包</span></td>
+                <td>28</td>
+                <td>
+                  <div className="action-buttons">
+                    <button className="btn btn-primary btn-sm">編輯</button>
+                    <button className="btn btn-danger btn-sm">刪除</button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Product 3 -->
+              <tr>
+                <td>
+                  <div className="d-flex align-items-center gap-2">
+                    <div style="width: 50px; height: 50px; background-color: var(--light-gray); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 24px;">☕</div>
+                    <div>
+                      <strong className="d-block">肯亞 AA 頂級</strong>
+                    </div>
+                  </div>
+                </td>
+                <td>肯亞</td>
+                <td>中深烘焙</td>
+                <td>NT$ 780</td>
+                <td><span className="badge bg-success">28 包</span></td>
+                <td>35</td>
+                <td>
+                  <div className="action-buttons">
+                    <button className="btn btn-primary btn-sm">編輯</button>
+                    <button className="btn btn-danger btn-sm">刪除</button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Product 4 -->
+              <tr>
+                <td>
+                  <div className="d-flex align-items-center gap-2">
+                    <div style="width: 50px; height: 50px; background-color: var(--light-gray); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 24px;">☕</div>
+                    <div>
+                      <strong className="d-block">瓜地馬拉 安提瓜</strong>
+                    </div>
+                  </div>
+                </td>
+                <td>瓜地馬拉</td>
+                <td>中烘焙</td>
+                <td>NT$ 650</td>
+                <td><span className="badge bg-success">42 包</span></td>
+                <td>21</td>
+                <td>
+                  <div className="action-buttons">
+                    <button className="btn btn-primary btn-sm">編輯</button>
+                    <button className="btn btn-danger btn-sm">刪除</button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Product 5 -->
+              <tr>
+                <td>
+                  <div className="d-flex align-items-center gap-2">
+                    <div style="width: 50px; height: 50px; background-color: var(--light-gray); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 24px;">☕</div>
+                    <div>
+                      <strong className="d-block">巴西 塞拉多</strong>
+                    </div>
+                  </div>
+                </td>
+                <td>巴西</td>
+                <td>深烘焙</td>
+                <td>NT$ 560</td>
+                <td><span className="badge bg-success">60 包</span></td>
+                <td>15</td>
+                <td>
+                  <div className="action-buttons">
+                    <button className="btn btn-primary btn-sm">編輯</button>
+                    <button className="btn btn-danger btn-sm">刪除</button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Product 6 -->
+              <tr>
+                <td>
+                  <div className="d-flex align-items-center gap-2">
+                    <div style="width: 50px; height: 50px; background-color: var(--light-gray); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 24px;">☕</div>
+                    <div>
+                      <strong className="d-block">巴拿馬 藝妓</strong>
+                      <small className="text-muted">限量</small>
+                    </div>
+                  </div>
+                </td>
+                <td>巴拿馬</td>
+                <td>淺烘焙</td>
+                <td>NT$ 1,580</td>
+                <td><span className="badge bg-warning">15 包</span></td>
+                <td>8</td>
+                <td>
+                  <div className="action-buttons">
+                    <button className="btn btn-primary btn-sm">編輯</button>
+                    <button className="btn btn-danger btn-sm">刪除</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Inventory Status -->
+      <div className="row g-3 mt-4">
+        <div className="col-md-6 col-lg-3">
+          <div className="admin-section text-center">
+            <div style="font-size: 1.75rem; font-weight: 700; color: var(--moss-green); margin-bottom: 0.625rem;">6</div>
+            <div className="text-muted small">商品總數</div>
+          </div>
+        </div>
+
+        <div className="col-md-6 col-lg-3">
+          <div className="admin-section text-center">
+            <div style="font-size: 1.75rem; font-weight: 700; color: #2E7D32; margin-bottom: 0.625rem;">230</div>
+            <div className="text-muted small">總庫存量</div>
+          </div>
+        </div>
+
+        <div className="col-md-6 col-lg-3">
+          <div className="admin-section text-center">
+            <div style="font-size: 1.75rem; font-weight: 700; color: var(--terracotta); margin-bottom: 0.625rem;">149</div>
+            <div className="text-muted small">已銷售</div>
+          </div>
+        </div>
+
+        <div className="col-md-6 col-lg-3">
+          <div className="admin-section text-center">
+            <div style="font-size: 1.75rem; font-weight: 700; color: var(--moss-green); margin-bottom: 0.625rem;">NT$ 4,870</div>
+            <div className="text-muted small">平均售價</div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

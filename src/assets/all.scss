@@ -1,0 +1,12 @@
+// Functions first
+@import "bootstrap/scss/functions";
+// @import 'bootstrap/dist/css/bootstrap.min';
+
+// Required Bootstrap imports
+// @import "bootstrap/scss/bootstrap"; // Include all of Bootstrap’s Sass
+@import "./variables";
+
+$primary-bg: pink;
+body {
+    // background-color: $primary-bg;
+}

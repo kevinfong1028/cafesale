@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>關於我們 - Bean & Brew 精品咖啡豆專賣</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* About Page Specific Styles */
+    .about-hero {
+      background: linear-gradient(135deg, rgba(93, 112, 82, 0.1) 0%, rgba(193, 140, 93, 0.1) 100%);
+      padding: 4rem 0;
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    @media (max-width: 768px) {
+      .about-hero {
+        padding: 2.5rem 0;
+      }
+    }
+
+    .about-hero h1 {
+      font-size: 2.75rem;
+      font-weight: 700;
+      color: var(--moss-green);
+      margin-bottom: 1rem;
+    }
+
+    @media (max-width: 576px) {
+      .about-hero h1 {
+        font-size: 2rem;
+      }
+    }
+
+    .about-hero p {
+      font-size: 1.125rem;
+      color: #666;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .about-section {
+      margin-bottom: 4rem;
+    }
+
+    .about-section h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--moss-green);
+      margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 576px) {
+      .about-section h2 {
+        font-size: 1.5rem;
+      }
+    }
+
+    .about-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+    }
+
+    @media (max-width: 768px) {
+      .about-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+    }
+
+    .about-text p {
+      font-size: 1rem;
+      line-height: 1.8;
+      color: #555;
+      margin-bottom: 1rem;
+    }
+
+    .about-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .about-image {
+      background: linear-gradient(135deg, rgba(93, 112, 82, 0.15) 0%, rgba(193, 140, 93, 0.15) 100%);
+      border-radius: 12px;
+      padding: 2rem;
+      text-align: center;
+      min-height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+    }
+
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    @media (max-width: 576px) {
+      .values-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+    }
+
+    .value-card {
+      background: white;
+      border-radius: 12px;
+      border: 1px solid var(--border-gray);
+      padding: 2rem;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .value-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(93, 112, 82, 0.15);
+      border-color: var(--moss-green);
+    }
+
+    .value-card .icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .value-card h3 {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--moss-green);
+      margin-bottom: 0.75rem;
+    }
+
+    .value-card p {
+      font-size: 0.9375rem;
+      color: #666;
+      line-height: 1.6;
+    }
+
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    @media (max-width: 576px) {
+      .team-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+    }
+
+    .team-member {
+      background: white;
+      border-radius: 12px;
+      border: 1px solid var(--border-gray);
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .team-member:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    .team-member-avatar {
+      background: linear-gradient(135deg, rgba(93, 112, 82, 0.2) 0%, rgba(193, 140, 93, 0.2) 100%);
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+    }
+
+    .team-member-info {
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .team-member-name {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--moss-green);
+      margin-bottom: 0.25rem;
+    }
+
+    .team-member-role {
+      font-size: 0.875rem;
+      color: var(--terracotta);
+      margin-bottom: 0.75rem;
+      font-weight: 600;
+    }
+
+    .team-member-bio {
+      font-size: 0.8125rem;
+      color: #666;
+      line-height: 1.6;
+    }
+
+    .timeline {
+      position: relative;
+      padding: 2rem 0;
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 2rem;
+      margin-bottom: 2rem;
+      align-items: flex-start;
+    }
+
+    @media (max-width: 576px) {
+      .timeline-item {
+        grid-template-columns: 80px 1fr;
+        gap: 1rem;
+      }
+    }
+
+    .timeline-year {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--moss-green);
+    }
+
+    .timeline-content {
+      background: white;
+      border-radius: 12px;
+      border-left: 4px solid var(--moss-green);
+      padding: 1.5rem;
+    }
+
+    .timeline-content h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--dark-text);
+      margin-bottom: 0.5rem;
+    }
+
+    .timeline-content p {
+      font-size: 0.9375rem;
+      color: #666;
+      margin: 0;
+    }
+
+    .stats-section {
+      background: linear-gradient(135deg, rgba(93, 112, 82, 0.08) 0%, rgba(193, 140, 93, 0.08) 100%);
+      border-radius: 12px;
+      padding: 3rem;
+      margin: 3rem 0;
+    }
+
+    @media (max-width: 576px) {
+      .stats-section {
+        padding: 2rem;
+      }
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+      text-align: center;
+    }
+
+    .stat-item h3 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--moss-green);
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-item p {
+      font-size: 0.9375rem;
+      color: #666;
+      font-weight: 600;
+    }
+
+    .cta-section {
+      background: white;
+      border-radius: 12px;
+      border: 2px solid var(--moss-green);
+      padding: 3rem;
+      text-align: center;
+      margin-top: 3rem;
+    }
+
+    @media (max-width: 576px) {
+      .cta-section {
+        padding: 2rem;
+      }
+    }
+
+    .cta-section h2 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--moss-green);
+      margin-bottom: 1rem;
+    }
+
+    .cta-section p {
+      font-size: 1rem;
+      color: #666;
+      margin-bottom: 1.5rem;
+    }
+
+    .cta-button {
+      display: inline-block;
+      background-color: var(--moss-green);
+      color: white;
+      padding: 0.875rem 2rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+    }
+
+    .cta-button:hover {
+      background-color: #4a5540;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(93, 112, 82, 0.3);
+    }
+
+    .navbar-custom {
+      background: white;
+      border-bottom: 1px solid var(--border-gray);
+      padding: 1rem 0;
+    }
+
+    .navbar-custom .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .navbar-brand {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--moss-green);
+      text-decoration: none;
+    }
+
+    .navbar-nav {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    @media (max-width: 768px) {
+      .navbar-nav {
+        gap: 1rem;
+        font-size: 0.875rem;
+      }
+    }
+
+    .navbar-nav a {
+      color: #666;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    .navbar-nav a:hover,
+    .navbar-nav a.active {
+      color: var(--moss-green);
+    }
+
+    .footer {
+      background: var(--moss-green);
+      color: white;
+      padding: 3rem 0 1rem;
+      margin-top: 4rem;
+    }
+
+    .footer-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 576px) {
+      .footer-content {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .footer-section h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .footer-section ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .footer-section li {
+      margin-bottom: 0.5rem;
+    }
+
+    .footer-section a {
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: color 0.3s ease;
+    }
+
+    .footer-section a:hover {
+      color: white;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      padding-top: 1.5rem;
+      text-align: center;
+      font-size: 0.875rem;
+      color: rgba(255, 255, 255, 0.8);
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav className="navbar-custom">
+    <div className="container">
+      <a href="index.html" className="navbar-brand">☕ Bean & Brew</a>
+      <ul className="navbar-nav">
+        <li><a href="index.html">首頁</a></li>
+        <li><a href="products.html">產品</a></li>
+        <li><a href="about.html" className="active">關於</a></li>
+        <li><a href="login.html">管理登入</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <div className="about-hero">
+    <div className="container">
+      <h1>關於 Bean & Brew</h1>
+      <p>我們致力於為咖啡愛好者帶來世界各地最優質的精品咖啡豆，每一包都承載著我們對咖啡文化的熱情與執著。</p>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <main className="container">
+    <!-- Our Story -->
+    <section className="about-section">
+      <h2>我們的故事</h2>
+      <div className="about-content">
+        <div className="about-text">
+          <p>Bean & Brew 成立於 2018 年，源自於創辦人對咖啡的深厚熱愛。我們相信，每一杯咖啡都應該是一次品味之旅，而不僅僅是一杯飲料。</p>
+          <p>從最初的小型咖啡館到現在的線上精品咖啡豆專賣店，我們始終堅持選擇最優質的咖啡豆。我們與世界各地的小農場建立長期合作關係，確保每一批咖啡豆都符合我們的高標準。</p>
+          <p>我們的使命是讓每個人都能享受到真正的精品咖啡，無論他們身在何處。通過教育、品質和熱情，我們正在改變人們對咖啡的認識。</p>
+        </div>
+        <div className="about-image">🌍</div>
+      </div>
+    </section>
+
+    <!-- Our Values -->
+    <section className="about-section">
+      <h2>我們的價值觀</h2>
+      <div className="values-grid">
+        <div className="value-card">
+          <div className="icon">🌱</div>
+          <h3>永續發展</h3>
+          <p>我們致力於環保的咖啡種植和包裝方式，為下一代保護地球。</p>
+        </div>
+        <div className="value-card">
+          <div className="icon">⭐</div>
+          <h3>品質第一</h3>
+          <p>每一包咖啡豆都經過嚴格的品質檢測，確保最佳風味。</p>
+        </div>
+        <div className="value-card">
+          <div className="icon">🤝</div>
+          <h3>公平貿易</h3>
+          <p>我們支持公平貿易，確保農民獲得應有的報酬。</p>
+        </div>
+        <div className="value-card">
+          <div className="icon">❤️</div>
+          <h3>熱情服務</h3>
+          <p>我們用心對待每一位客戶，提供專業的咖啡建議。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Statistics -->
+    <section className="stats-section">
+      <div className="stats-grid">
+        <div className="stat-item">
+          <h3>2,500+</h3>
+          <p>滿意客戶</p>
+        </div>
+        <div className="stat-item">
+          <h3>15+</h3>
+          <p>咖啡產地</p>
+        </div>
+        <div className="stat-item">
+          <h3>6 年</h3>
+          <p>行業經驗</p>
+        </div>
+        <div className="stat-item">
+          <h3>100%</h3>
+          <p>品質保證</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Our Team -->
+    <section className="about-section">
+      <h2>我們的團隊</h2>
+      <div className="team-grid">
+        <div className="team-member">
+          <div className="team-member-avatar">☕</div>
+          <div className="team-member-info">
+            <div className="team-member-name">李明軒</div>
+            <div className="team-member-role">創辦人 & CEO</div>
+            <div className="team-member-bio">咖啡烘焙師，擁有 15 年的咖啡行業經驗，致力於推廣精品咖啡文化。</div>
+          </div>
+        </div>
+        <div className="team-member">
+          <div className="team-member-avatar">🌍</div>
+          <div className="team-member-info">
+            <div className="team-member-name">王美琪</div>
+            <div className="team-member-role">採購經理</div>
+            <div className="team-member-bio">與全球咖啡農場建立合作關係，確保咖啡豆的品質和新鮮度。</div>
+          </div>
+        </div>
+        <div className="team-member">
+          <div className="team-member-avatar">🎯</div>
+          <div className="team-member-info">
+            <div className="team-member-name">陳俊傑</div>
+            <div className="team-member-role">品質控制主任</div>
+            <div className="team-member-bio">確保每一批咖啡豆都達到最高標準，為客戶提供最佳品質。</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Timeline -->
+    <section className="about-section">
+      <h2>發展歷程</h2>
+      <div className="timeline">
+        <div className="timeline-item">
+          <div className="timeline-year">2018</div>
+          <div className="timeline-content">
+            <h3>Bean & Brew 成立</h3>
+            <p>在台北開設第一間咖啡館，開始我們的咖啡之旅。</p>
+          </div>
+        </div>
+        <div className="timeline-item">
+          <div className="timeline-year">2019</div>
+          <div className="timeline-content">
+            <h3>推出線上商店</h3>
+            <p>開設線上精品咖啡豆販售平台，服務全台灣客戶。</p>
+          </div>
+        </div>
+        <div className="timeline-item">
+          <div className="timeline-year">2020</div>
+          <div className="timeline-content">
+            <h3>國際合作擴展</h3>
+            <p>與衣索比亞、哥倫比亞等地的咖啡農場建立長期合作。</p>
+          </div>
+        </div>
+        <div className="timeline-item">
+          <div className="timeline-year">2022</div>
+          <div className="timeline-content">
+            <h3>獲得認證</h3>
+            <p>獲得國際公平貿易認證，成為認證的公平貿易咖啡商。</p>
+          </div>
+        </div>
+        <div className="timeline-item">
+          <div className="timeline-year">2024</div>
+          <div className="timeline-content">
+            <h3>持續創新</h3>
+            <p>推出新的烘焙工藝和客製化服務，滿足更多客戶需求。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section className="cta-section">
+      <h2>開始您的咖啡之旅</h2>
+      <p>探索我們精選的咖啡豆，找到您最喜愛的風味。</p>
+      <a href="products.html" className="cta-button">瀏覽產品</a>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer className="footer">
+    <div className="container">
+      <div className="footer-content">
+        <div className="footer-section">
+          <h3>☕ Bean & Brew</h3>
+          <p style="font-size: 0.875rem; color: rgba(255, 255, 255, 0.8);">精品咖啡豆專賣，為您帶來世界各地最優質的咖啡體驗。</p>
+        </div>
+        <div className="footer-section">
+          <h3>快速連結</h3>
+          <ul>
+            <li><a href="index.html">首頁</a></li>
+            <li><a href="products.html">產品</a></li>
+            <li><a href="about.html">關於我們</a></li>
+            <li><a href="login.html">管理登入</a></li>
+          </ul>
+        </div>
+        <div className="footer-section">
+          <h3>聯絡方式</h3>
+          <ul>
+            <li>📧 info@beanbrew.com</li>
+            <li>📞 (02) 1234-5678</li>
+            <li>📍 台北市中山區</li>
+          </ul>
+        </div>
+        <div className="footer-section">
+          <h3>追蹤我們</h3>
+          <ul>
+            <li><a href="#">Facebook</a></li>
+            <li><a href="#">Instagram</a></li>
+            <li><a href="#">Twitter</a></li>
+          </ul>
+        </div>
+      </div>
+      <div className="footer-bottom">
+        <p>&copy; 2024 Bean & Brew. All rights reserved. | 隱私政策 | 服務條款</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
