@@ -39,7 +39,7 @@ export default function Login() {
                 // 登入成功
                 console.log("登入成功:", res.data);
                 const { token, expired } = res.data;
-                document.cookie = `hexToken=${token};expires=${new Date(expired)};`;
+                document.cookie = `hexToken=${token};expires=${new Date(expired).toUTCString()}; path=/`;
                 dispatch(login(res.data));
                 navigate("/admin/products");
             } else {

@@ -1,11 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { productApi} from "../apis";
 import { Outlet, NavLink } from "react-router";
 
 export default function Home() {
     // useState;
+    useEffect(() => {
+        productApi.getAll().then((res) => {
+            console.log("productApi res", res);
+        });
+    }, []);
+
     return (
         <>
-            
             {/* <!-- Hero Section --> */}
             <section className="hero">
                 <div className="container">
@@ -181,10 +187,7 @@ export default function Home() {
                     <div className="row g-4 mb-4">
                         <div className="col-md-6 col-lg-3">
                             <h5>Bean & Brew</h5>
-                            <p
-                                className="small"
-                                style={{ lineHeight: "1.8" }}
-                            >
+                            <p className="small" style={{ lineHeight: "1.8" }}>
                                 致力於帶給咖啡愛好者最純粹的精品咖啡體驗。每一顆豆都經過精心挑選與烘焙。
                             </p>
                         </div>

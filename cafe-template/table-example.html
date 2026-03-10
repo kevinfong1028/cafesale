@@ -1,0 +1,804 @@
+<!doctype html>
+<html lang="zh-TW">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>表格示例 - Bean & Brew</title>
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="styles.css" />
+        <style>
+            /* Table Example Page Specific Styles */
+            .page-header {
+                background: linear-gradient(
+                    135deg,
+                    rgba(93, 112, 82, 0.1) 0%,
+                    rgba(193, 140, 93, 0.1) 100%
+                );
+                padding: 3rem 0;
+                margin-bottom: 3rem;
+            }
+
+            .page-header h1 {
+                font-size: 2.5rem;
+                font-weight: 700;
+                color: var(--moss-green);
+                margin-bottom: 0.5rem;
+            }
+
+            @media (max-width: 576px) {
+                .page-header h1 {
+                    font-size: 1.75rem;
+                }
+            }
+
+            .page-header p {
+                font-size: 1rem;
+                color: #666;
+            }
+
+            /* Table Container */
+            .table-container {
+                background: white;
+                border-radius: 12px;
+                border: 1px solid var(--border-gray);
+                overflow: hidden;
+                margin-bottom: 3rem;
+            }
+
+            /* Responsive Table */
+            .responsive-table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+
+            .responsive-table thead {
+                background-color: var(--moss-green);
+                color: white;
+            }
+
+            .responsive-table th {
+                padding: 1.25rem;
+                text-align: left;
+                font-weight: 700;
+                font-size: 0.9375rem;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            .responsive-table td {
+                padding: 1.25rem;
+                border-bottom: 1px solid var(--border-gray);
+                font-size: 0.9375rem;
+                color: #555;
+            }
+
+            .responsive-table tbody tr {
+                transition: background-color 0.3s ease;
+            }
+
+            .responsive-table tbody tr:hover {
+                background-color: rgba(93, 112, 82, 0.05);
+            }
+
+            .responsive-table tbody tr:last-child td {
+                border-bottom: none;
+            }
+
+            /* Action Buttons */
+            .action-buttons {
+                display: flex;
+                gap: 0.75rem;
+                flex-wrap: wrap;
+            }
+
+            .btn-action {
+                padding: 0.5rem 1rem;
+                border-radius: 6px;
+                border: none;
+                font-size: 0.8125rem;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                text-decoration: none;
+                display: inline-block;
+            }
+
+            .btn-primary-action {
+                background-color: var(--moss-green);
+                color: white;
+            }
+
+            .btn-primary-action:hover {
+                background-color: #4a5540;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(93, 112, 82, 0.3);
+            }
+
+            .btn-secondary-action {
+                background-color: var(--terracotta);
+                color: white;
+            }
+
+            .btn-secondary-action:hover {
+                background-color: #a86d47;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(193, 140, 93, 0.3);
+            }
+
+            .btn-action:active {
+                transform: translateY(0);
+            }
+
+            /* Mobile Responsive Table */
+            @media (max-width: 768px) {
+                .responsive-table {
+                    font-size: 0.875rem;
+                }
+
+                .responsive-table th,
+                .responsive-table td {
+                    padding: 1rem;
+                }
+
+                .responsive-table th {
+                    font-size: 0.8125rem;
+                }
+
+                .action-buttons {
+                    gap: 0.5rem;
+                }
+
+                .btn-action {
+                    padding: 0.4rem 0.8rem;
+                    font-size: 0.75rem;
+                }
+            }
+
+            @media (max-width: 576px) {
+                .responsive-table {
+                    font-size: 0.75rem;
+                }
+
+                .responsive-table th,
+                .responsive-table td {
+                    padding: 0.75rem;
+                }
+
+                .responsive-table th {
+                    font-size: 0.7rem;
+                }
+
+                .action-buttons {
+                    flex-direction: column;
+                    gap: 0.25rem;
+                }
+
+                .btn-action {
+                    width: 100%;
+                    padding: 0.5rem;
+                    font-size: 0.7rem;
+                }
+            }
+
+            /* Card-based Table for Mobile */
+            @media (max-width: 576px) {
+                .table-container {
+                    border: none;
+                    background: transparent;
+                }
+
+                .responsive-table {
+                    display: block;
+                }
+
+                .responsive-table thead {
+                    display: none;
+                }
+
+                .responsive-table tbody {
+                    display: block;
+                }
+
+                .responsive-table tr {
+                    display: block;
+                    background: white;
+                    border-radius: 12px;
+                    border: 1px solid var(--border-gray);
+                    margin-bottom: 1rem;
+                    overflow: hidden;
+                }
+
+                .responsive-table tr:hover {
+                    background-color: white;
+                }
+
+                .responsive-table td {
+                    display: block;
+                    padding: 0.75rem 1rem;
+                    border-bottom: 1px solid var(--border-gray);
+                    font-size: 0.875rem;
+                }
+
+                .responsive-table td:last-child {
+                    border-bottom: none;
+                }
+
+                .responsive-table td::before {
+                    content: attr(data-label);
+                    font-weight: 700;
+                    color: var(--moss-green);
+                    display: block;
+                    margin-bottom: 0.25rem;
+                    font-size: 0.75rem;
+                    text-transform: uppercase;
+                }
+            }
+
+            /* Table Sections */
+            .table-section {
+                margin-bottom: 4rem;
+            }
+
+            .table-section h2 {
+                font-size: 1.75rem;
+                font-weight: 700;
+                color: var(--moss-green);
+                margin-bottom: 1.5rem;
+            }
+
+            .table-description {
+                font-size: 0.9375rem;
+                color: #666;
+                margin-bottom: 1.5rem;
+                line-height: 1.6;
+            }
+
+            /* Code Example */
+            .code-example {
+                background: #f5f3f0;
+                border-radius: 8px;
+                padding: 1.5rem;
+                margin-top: 2rem;
+                overflow-x: auto;
+            }
+
+            .code-example pre {
+                margin: 0;
+                font-size: 0.8125rem;
+                color: #333;
+                font-family: "Courier New", monospace;
+                line-height: 1.5;
+            }
+
+            /* Navbar */
+            .navbar-custom {
+                background: white;
+                border-bottom: 1px solid var(--border-gray);
+                padding: 1rem 0;
+            }
+
+            .navbar-custom .container {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .navbar-brand {
+                font-size: 1.5rem;
+                font-weight: 700;
+                color: var(--moss-green);
+                text-decoration: none;
+            }
+
+            .navbar-nav {
+                display: flex;
+                gap: 2rem;
+                list-style: none;
+                margin: 0;
+                padding: 0;
+            }
+
+            @media (max-width: 768px) {
+                .navbar-nav {
+                    gap: 1rem;
+                    font-size: 0.875rem;
+                }
+            }
+
+            .navbar-nav a {
+                color: #666;
+                text-decoration: none;
+                font-weight: 500;
+                transition: color 0.3s ease;
+            }
+
+            .navbar-nav a:hover,
+            .navbar-nav a.active {
+                color: var(--moss-green);
+            }
+
+            /* Footer */
+            .footer {
+                background: var(--moss-green);
+                color: white;
+                padding: 3rem 0 1rem;
+                margin-top: 4rem;
+            }
+
+            .footer-content {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 2rem;
+                margin-bottom: 2rem;
+            }
+
+            @media (max-width: 576px) {
+                .footer-content {
+                    grid-template-columns: 1fr;
+                }
+            }
+
+            .footer-section h3 {
+                font-size: 1rem;
+                font-weight: 700;
+                margin-bottom: 1rem;
+            }
+
+            .footer-section ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+
+            .footer-section li {
+                margin-bottom: 0.5rem;
+            }
+
+            .footer-section a {
+                color: rgba(255, 255, 255, 0.8);
+                text-decoration: none;
+                font-size: 0.875rem;
+                transition: color 0.3s ease;
+            }
+
+            .footer-section a:hover {
+                color: white;
+            }
+
+            .footer-bottom {
+                border-top: 1px solid rgba(255, 255, 255, 0.2);
+                padding-top: 1.5rem;
+                text-align: center;
+                font-size: 0.875rem;
+                color: rgba(255, 255, 255, 0.8);
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Navigation -->
+        <nav class="navbar-custom">
+            <div class="container">
+                <a href="index.html" class="navbar-brand">☕ Bean & Brew</a>
+                <ul class="navbar-nav">
+                    <li><a href="index.html">首頁</a></li>
+                    <li><a href="products.html">產品</a></li>
+                    <li><a href="about.html">關於</a></li>
+                    <li><a href="contact.html">聯絡</a></li>
+                    <li><a href="login.html">管理登入</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="container">
+                <h1>自適應表格示例</h1>
+                <p>展示在不同螢幕尺寸下的表格響應式設計</p>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="container">
+            <!-- Basic Table Example -->
+            <section class="table-section">
+                <h2>基本表格</h2>
+                <p class="table-description">
+                    以下是一個簡單的 2 行 2
+                    列表格示例。第二列包含兩顆不同顏色的按鈕。在手機上，表格會自動轉換為卡片式布局，確保內容清晰易讀。
+                </p>
+
+                <div class="table-container">
+                    <table class="responsive-table">
+                        <thead>
+                            <tr>
+                                <th>產品名稱</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td data-label="產品名稱">衣索比亞 耶加雪菲</td>
+                                <td data-label="操作">
+                                    <div class="action-buttons">
+                                        <button
+                                            class="btn-action btn-primary-action"
+                                        >
+                                            編輯
+                                        </button>
+                                        <button
+                                            class="btn-action btn-secondary-action"
+                                        >
+                                            刪除
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td data-label="產品名稱">哥倫比亞 薇拉</td>
+                                <td data-label="操作">
+                                    <div class="action-buttons">
+                                        <button
+                                            class="btn-action btn-primary-action"
+                                        >
+                                            編輯
+                                        </button>
+                                        <button
+                                            class="btn-action btn-secondary-action"
+                                        >
+                                            刪除
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="code-example">
+                    <pre>
+&lt;table class="responsive-table"&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;產品名稱&lt;/th&gt;
+      &lt;th&gt;操作&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td data-label="產品名稱"&gt;衣索比亞 耶加雪菲&lt;/td&gt;
+      &lt;td data-label="操作"&gt;
+        &lt;div class="action-buttons"&gt;
+          &lt;button class="btn-action btn-primary-action"&gt;編輯&lt;/button&gt;
+          &lt;button class="btn-action btn-secondary-action"&gt;刪除&lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</pre
+                    >
+                </div>
+            </section>
+
+            <!-- Extended Table Example -->
+            <section class="table-section">
+                <h2>擴展表格範例</h2>
+                <p class="table-description">
+                    這個表格展示了更多的產品資訊。同樣的響應式設計適用於任何列數的表格。
+                </p>
+
+                <div class="table-container">
+                    <table class="responsive-table">
+                        <thead>
+                            <tr>
+                                <th>品項</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td data-label="品項">肯亞 AA 頂級</td>
+                                <td data-label="操作">
+                                    <div class="action-buttons">
+                                        <button
+                                            class="btn-action btn-primary-action"
+                                        >
+                                            查看
+                                        </button>
+                                        <button
+                                            class="btn-action btn-secondary-action"
+                                        >
+                                            移除
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td data-label="品項">瓜地馬拉 安提瓜</td>
+                                <td data-label="操作">
+                                    <div class="action-buttons">
+                                        <button
+                                            class="btn-action btn-primary-action"
+                                        >
+                                            查看
+                                        </button>
+                                        <button
+                                            class="btn-action btn-secondary-action"
+                                        >
+                                            移除
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Design Features -->
+            <section class="table-section">
+                <h2>設計特性</h2>
+
+                <div
+                    style="
+                        background: white;
+                        border-radius: 12px;
+                        border: 1px solid var(--border-gray);
+                        padding: 2rem;
+                    "
+                >
+                    <div
+                        style="
+                            display: grid;
+                            grid-template-columns: repeat(
+                                auto-fit,
+                                minmax(250px, 1fr)
+                            );
+                            gap: 2rem;
+                        "
+                    >
+                        <div>
+                            <h3
+                                style="
+                                    font-size: 1.125rem;
+                                    font-weight: 700;
+                                    color: var(--moss-green);
+                                    margin-bottom: 1rem;
+                                "
+                            >
+                                📱 完全響應式
+                            </h3>
+                            <p
+                                style="
+                                    font-size: 0.9375rem;
+                                    color: #666;
+                                    line-height: 1.6;
+                                "
+                            >
+                                在桌面上顯示完整表格，在手機上自動轉換為卡片式布局。
+                            </p>
+                        </div>
+                        <div>
+                            <h3
+                                style="
+                                    font-size: 1.125rem;
+                                    font-weight: 700;
+                                    color: var(--moss-green);
+                                    margin-bottom: 1rem;
+                                "
+                            >
+                                🎨 設計一致
+                            </h3>
+                            <p
+                                style="
+                                    font-size: 0.9375rem;
+                                    color: #666;
+                                    line-height: 1.6;
+                                "
+                            >
+                                使用 Organic Naturalism
+                                設計風格，按鈕顏色與品牌保持一致。
+                            </p>
+                        </div>
+                        <div>
+                            <h3
+                                style="
+                                    font-size: 1.125rem;
+                                    font-weight: 700;
+                                    color: var(--moss-green);
+                                    margin-bottom: 1rem;
+                                "
+                            >
+                                ✨ 互動效果
+                            </h3>
+                            <p
+                                style="
+                                    font-size: 0.9375rem;
+                                    color: #666;
+                                    line-height: 1.6;
+                                "
+                            >
+                                行懸停效果、按鈕動畫，提升用戶體驗。
+                            </p>
+                        </div>
+                        <div>
+                            <h3
+                                style="
+                                    font-size: 1.125rem;
+                                    font-weight: 700;
+                                    color: var(--moss-green);
+                                    margin-bottom: 1rem;
+                                "
+                            >
+                                🎯 易於使用
+                            </h3>
+                            <p
+                                style="
+                                    font-size: 0.9375rem;
+                                    color: #666;
+                                    line-height: 1.6;
+                                "
+                            >
+                                清晰的按鈕標籤，在所有設備上都易於點擊。
+                            </p>
+                        </div>
+                        <div>
+                            <h3
+                                style="
+                                    font-size: 1.125rem;
+                                    font-weight: 700;
+                                    color: var(--moss-green);
+                                    margin-bottom: 1rem;
+                                "
+                            >
+                                🔧 易於自訂
+                            </h3>
+                            <p
+                                style="
+                                    font-size: 0.9375rem;
+                                    color: #666;
+                                    line-height: 1.6;
+                                "
+                            >
+                                使用 CSS 變數和 Bootstrap 類名，輕鬆自訂樣式。
+                            </p>
+                        </div>
+                        <div>
+                            <h3
+                                style="
+                                    font-size: 1.125rem;
+                                    font-weight: 700;
+                                    color: var(--moss-green);
+                                    margin-bottom: 1rem;
+                                "
+                            >
+                                📊 多用途
+                            </h3>
+                            <p
+                                style="
+                                    font-size: 0.9375rem;
+                                    color: #666;
+                                    line-height: 1.6;
+                                "
+                            >
+                                適用於產品列表、訂單管理、用戶管理等場景。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Responsive Breakpoints -->
+            <section class="table-section">
+                <h2>響應式斷點</h2>
+
+                <div
+                    style="
+                        background: white;
+                        border-radius: 12px;
+                        border: 1px solid var(--border-gray);
+                        padding: 2rem;
+                    "
+                >
+                    <table class="responsive-table">
+                        <thead>
+                            <tr>
+                                <th>螢幕寬度</th>
+                                <th>表格行為</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td data-label="螢幕寬度">&lt; 576px</td>
+                                <td data-label="表格行為">
+                                    卡片式布局，每行一個卡片，按鈕堆疊
+                                </td>
+                            </tr>
+                            <tr>
+                                <td data-label="螢幕寬度">576px - 768px</td>
+                                <td data-label="表格行為">
+                                    表格縮小字體，按鈕並排
+                                </td>
+                            </tr>
+                            <tr>
+                                <td data-label="螢幕寬度">768px - 992px</td>
+                                <td data-label="表格行為">
+                                    表格正常顯示，略微縮小
+                                </td>
+                            </tr>
+                            <tr>
+                                <td data-label="螢幕寬度">&gt; 992px</td>
+                                <td data-label="表格行為">
+                                    完整表格，全尺寸顯示
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-section">
+                        <h3>☕ Bean & Brew</h3>
+                        <p
+                            style="
+                                font-size: 0.875rem;
+                                color: rgba(255, 255, 255, 0.8);
+                            "
+                        >
+                            精品咖啡豆專賣，為您帶來世界各地最優質的咖啡體驗。
+                        </p>
+                    </div>
+                    <div class="footer-section">
+                        <h3>快速連結</h3>
+                        <ul>
+                            <li><a href="index.html">首頁</a></li>
+                            <li><a href="products.html">產品</a></li>
+                            <li><a href="about.html">關於我們</a></li>
+                            <li><a href="contact.html">聯絡我們</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h3>聯絡方式</h3>
+                        <ul>
+                            <li>📧 info@beanbrew.com</li>
+                            <li>📞 (02) 1234-5678</li>
+                            <li>📍 台北市中山區</li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h3>追蹤我們</h3>
+                        <ul>
+                            <li><a href="#">Facebook</a></li>
+                            <li><a href="#">Instagram</a></li>
+                            <li><a href="#">Twitter</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>
+                        &copy; 2024 Bean & Brew. All rights reserved. | 隱私政策
+                        | 服務條款
+                    </p>
+                </div>
+            </div>
+        </footer>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            // Add click handlers to buttons
+            const buttons = document.querySelectorAll(".btn-action");
+            buttons.forEach((button) => {
+                button.addEventListener("click", function () {
+                    alert("按鈕已點擊: " + this.textContent);
+                });
+            });
+        </script>
+    </body>
+</html>

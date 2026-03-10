@@ -1,0 +1,195 @@
+/* Table Container */
+.table-container {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid var(--border-gray);
+    overflow: hidden;
+    margin-bottom: 3rem;
+
+    /* Responsive Table */
+    .responsive-table {
+        width: 100%;
+        border-collapse: collapse;
+        thead {
+            background-color: var(--moss-green);
+            color: white;
+            th {
+                padding: 1.25rem;
+                text-align: left;
+                font-weight: 700;
+                font-size: 0.9375rem;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+        }
+
+        tbody {
+            tr {
+                transition: background-color 0.3s ease;
+                & :hover {
+                    background-color: rgba(93, 112, 82, 0.05);
+                }
+                td {
+                    padding: 0.5rem;
+                    border-bottom: 1px solid var(--border-gray);
+                    font-size: 0.9375rem;
+                    color: #555;
+                }
+            }
+            tr:last-child td {
+                border-bottom: none;
+            }
+        }
+    }
+}
+
+/* Pagination Container */
+.pagination-section {
+    margin-bottom: 4rem;
+    h2 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--moss-green);
+        margin-bottom: 1.5rem;
+    }
+}
+
+// .pagination-section
+
+.pagination-description {
+    font-size: 0.9375rem;
+    color: #666;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+/* Pagination Styles */
+.pagination {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    background: white;
+    border-radius: 12px;
+    border: 1px solid var(--border-gray);
+    padding: 1.5rem;
+}
+
+@media (max-width: 576px) {
+    .pagination {
+        gap: 0.25rem;
+        padding: 1rem;
+    }
+}
+
+.pagination-item {
+    display: inline-block;
+}
+
+.pagination-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 40px;
+    padding: 0.5rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-gray);
+    background-color: white;
+    color: #666;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+@media (max-width: 576px) {
+    .pagination-link {
+        min-width: 36px;
+        height: 36px;
+        font-size: 0.8125rem;
+    }
+}
+
+.pagination-link:hover:not(.disabled):not(.active) {
+    border-color: var(--moss-green);
+    color: var(--moss-green);
+    background-color: rgba(93, 112, 82, 0.05);
+    transform: translateY(-2px);
+}
+
+.pagination-link.active {
+    background-color: var(--moss-green);
+    color: white;
+    border-color: var(--moss-green);
+}
+
+.pagination-link.disabled {
+    color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.pagination-link.prev,
+.pagination-link.next {
+    min-width: auto;
+    padding: 0.5rem 1rem;
+}
+
+/* Pagination Variants */
+.pagination-variant {
+    margin-bottom: 3rem;
+}
+
+.variant-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--dark-text);
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--border-gray);
+}
+
+/* Pagination with Info */
+.pagination-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+@media (max-width: 576px) {
+    .pagination-info {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+.pagination-info-text {
+    font-size: 0.9375rem;
+    color: #666;
+    font-weight: 500;
+}
+
+.pagination-info-text strong {
+    color: var(--moss-green);
+}
+
+/* Pagination Sizes */
+.pagination-lg .pagination-link {
+    min-width: 48px;
+    height: 48px;
+    font-size: 1rem;
+}
+
+.pagination-sm .pagination-link {
+    min-width: 32px;
+    height: 32px;
+    font-size: 0.8125rem;
+}

@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { NavLink } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
-import { login,logout } from "../store/slice/userSlice";
+import { login, logout } from "../store/slice/userSlice";
 import { userApi } from "../apis";
-
+import axios from "axios";
+const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 export default function Header() {
     // const [isLogin, setIsLogin] = useState(false);
     const [cartCount, setCartCount] = useState(1);
@@ -21,22 +22,45 @@ export default function Header() {
             .find((row) => row.startsWith("hexToken="))
             ?.split("=")[1];
         // return !!token; // 如果有 token 就回傳 true，否則回傳 false
+        // console.log("toekn", token);
 
         if (!!token) {
-            console.log('yes')
+            console.log("token found");
             dispatch(login({ token }));
         } else {
-            console.log('no')
-            // dispatch(logout());
+            console.log("token not found");
+            dispatch(logout());
         }
     };
     checkUserLogin();
 
-    const signOut = () => {
+    const checkUser = async () => {
+        const res = await axios.post(
+            "https://ec-course-api.hexschool.io/v2/api/user/check",
+        );
+        console.log("checkUser res", res);
+    };
+
+    const signOut = async () => {
+        console.log("logout clicked");
+        try {
+            const rep = await axios.post(`${VITE_API_BASE}/logout`);
+            console.log("logout response", rep);
+        } catch (error) {
+            console.log("logout failed", error);
+        } finally {
+            document.cookie =
+                "hexToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            dispatch(logout());
+        }
+        return;
+
         userApi
             .logout()
             .then((res) => {
                 console.log("logout res", res);
+                return;
+
                 if (res.data.success) {
                     // 登出成功
                     console.log("登出成功:", res.data);
@@ -97,15 +121,41 @@ export default function Header() {
                                     Contact
                                 </NavLink>
                             </li>
+                            {user.isLoggedIn && (
+                                <>
+                                    <li>
+                                        <NavLink
+                                            className="nav-link"
+                                            to="/admin"
+                                        >
+                                            Dashboard
+                                        </NavLink>
+                                    </li>
+                                    <li>
+                                        <NavLink
+                                            className="nav-link"
+                                            to="/admin/products"
+                                        >
+                                            商品管理
+                                        </NavLink>
+                                    </li>
+                                    <li>
+                                        <NavLink
+                                            className="nav-link"
+                                            to="/admin/order"
+                                        >
+                                            Order
+                                        </NavLink>
+                                    </li>
+                                </>
+                            )}
                             <li>
-                                <NavLink className="nav-link" to="/admin">
-                                    Dashboard
-                                </NavLink>
-                            </li>
-                            <li>
-                                <NavLink className="nav-link" to="/admin/order">
-                                    Order
-                                </NavLink>
+                                <a
+                                    className="nav-link btn btn-info btn-sm"
+                                    onClick={checkUser}
+                                >
+                                    CheckUser
+                                </a>
                             </li>
                             {/* <li className="nav-item">
                                 <a className="nav-link" href="about.html">
