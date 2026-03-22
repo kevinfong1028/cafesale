@@ -40,7 +40,8 @@ export default function Login() {
                 console.log("登入成功:", res.data);
                 const { token, expired } = res.data;
                 document.cookie = `hexToken=${token};expires=${new Date(expired).toUTCString()}; path=/`;
-                dispatch(login(res.data));
+                dispatch(login(res.data.uid));
+                
                 navigate("/admin/products");
             } else {
                 // 登入失敗
@@ -116,7 +117,7 @@ export default function Login() {
                         </button>
 
                         <div className="forgot-password">
-                            <a>忘記密碼？</a>
+                            {/* <a>忘記密碼？</a> */}
                         </div>
                     </form>
 
@@ -142,23 +143,6 @@ export default function Login() {
                         Password: admin123
                     </div>
 
-                    <div className="features">
-                        <div className="feature-item">
-                            <div className="icon">📊</div>
-                            <div className="title">儀表板</div>
-                            <div className="description">實時銷售數據</div>
-                        </div>
-                        <div className="feature-item">
-                            <div className="icon">📦</div>
-                            <div className="title">商品管理</div>
-                            <div className="description">庫存控制</div>
-                        </div>
-                        <div className="feature-item">
-                            <div className="icon">📋</div>
-                            <div className="title">訂單管理</div>
-                            <div className="description">追蹤訂單</div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </>

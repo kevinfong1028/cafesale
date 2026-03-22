@@ -5,46 +5,18 @@ import { login, logout } from "../store/slice/userSlice";
 import { userApi } from "../apis";
 import axios from "axios";
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
+
 export default function Header() {
     // const [isLogin, setIsLogin] = useState(false);
     const [cartCount, setCartCount] = useState(1);
     const user = useSelector((state) => state.user);
-    console.log("user", user);
+    console.log("user @store", user);
     const storeUser = useSelector((state) => state.user);
     const dispatch = useDispatch();
 
-    const checkUserLogin = () => {
-        console.log("checkUserLogin", storeUser);
-        if (storeUser.isLoggedIn) return;
-
-        const token = document.cookie
-            .split("; ")
-            .find((row) => row.startsWith("hexToken="))
-            ?.split("=")[1];
-        // return !!token; // 如果有 token 就回傳 true，否則回傳 false
-        // console.log("toekn", token);
-
-        if (!!token) {
-            console.log("token found");
-            dispatch(login({ token }));
-        } else {
-            console.log("token not found");
-            dispatch(logout());
-        }
-    };
-    checkUserLogin();
-
-    const checkUser = async () => {
-        const res = await axios.post(
-            "https://ec-course-api.hexschool.io/v2/api/user/check",
-        );
-        console.log("checkUser res", res);
-    };
-
     const signOut = async () => {
-        console.log("logout clicked");
         try {
-            const rep = await axios.post(`${VITE_API_BASE}/logout`);
+            const rep = await userApi.logout();
             console.log("logout response", rep);
         } catch (error) {
             console.log("logout failed", error);
@@ -149,14 +121,6 @@ export default function Header() {
                                     </li>
                                 </>
                             )}
-                            <li>
-                                <a
-                                    className="nav-link btn btn-info btn-sm"
-                                    onClick={checkUser}
-                                >
-                                    CheckUser
-                                </a>
-                            </li>
                             {/* <li className="nav-item">
                                 <a className="nav-link" href="about.html">
                                     關於我們

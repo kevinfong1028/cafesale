@@ -1,11 +1,12 @@
 import axios from "axios";
-console.log(import.meta.env);
+// import { router } from "./main";
+// console.log(import.meta.env);
 
 // const API_BASE = import.meta.env.VITE_API_BASE;
 // const API_PATH = import.meta.env.VITE_API_PATH;
 // console.log("api base path", `${API_BASE}/${API_PATH}`);
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
-console.log("api base path", VITE_API_BASE);
+// console.log("api base path", VITE_API_BASE);
 
 const service = axios.create({
     baseURL: VITE_API_BASE,
@@ -22,7 +23,7 @@ service.interceptors.request.use(
             .find((row) => row.startsWith("hexToken="))
             ?.split("=")[1];
         if (token) {
-            config.headers["Authorization"] = `Bearer ${token}`;
+            config.headers["Authorization"] = token;
         }
         return config;
     },
@@ -46,12 +47,6 @@ service.interceptors.response.use(
     (error) => {
         // failed
         console.log("[AXIOS Failed]", error);
-        if (error.response && error.response.status === 401) {
-            // 可以在這裡執行登出操作，或者重定向到登入頁面
-            console.log("Unauthorized, redirecting to login...");
-            // document.cookie = "hexToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-            // window.location.href = "/login";
-        }
         return Promise.reject(error);
     },
 );
@@ -59,19 +54,28 @@ service.interceptors.response.use(
 const userApi = {
     login: (data) => service.post("/admin/signin", data),
     logout: () => {
-        console.log("calling logout api");
-        return service.post("/logout", {});
+        console.log("userApi.logout");
+        return service.post("/logout");
     },
-    checkuser: () => service.get(`/api/user/check`),
+    checkUser: () => service.post(`/api/user/check`),
+    // checkUser: async () => {
+    //     console.log("checkadmin start===");
+    //     const apiBase = import.meta.env.VITE_API_BASE;
+    //     // const res = await axios.post(`${apiBase}/api/user/check`);
+    //     const res = await axios.post("https://ec-course-api.hexschool.io/v2/api/user/check");
+    //     console.log("checkadmin end===", res);
+    // },
 };
 
 const adminProductApi = {
     getAll: () => service.get(`/api/${VITE_API_PATH}/products/all`),
-    getByPage: (p = 1) =>
-        service.get(`/api/${VITE_API_PATH}/products?page=${p}`),
-    add: (req) => service.post(`/api/${VITE_API_PATH}/product`, req),
-    edit: (id, req) => service.put(`/api/${VITE_API_PATH}/product/${id}`, req),
-    delete: (id) => service.delete(`/api/${VITE_API_PATH}/product/${id}`),
+    getByPage: (params = 1) =>
+        service.get(`/api/${VITE_API_PATH}/admin/products?`, {params}),
+        // service.get(`/api/${VITE_API_PATH}/admin/products?page=${p}`),
+    add: (req) => service.post(`/api/${VITE_API_PATH}/admin/product`, { data: req }),
+    edit: (id, req) =>
+        service.put(`/api/${VITE_API_PATH}/admin/product/${id}`, { data: req }),
+    delete: (id) => service.delete(`/api/${VITE_API_PATH}/admin/product/${id}`),
 };
 
 const productApi = {

@@ -8,7 +8,7 @@ import "bootstrap";
 // router
 import { createHashRouter, RouterProvider } from "react-router";
 import routes from "./router";
-const router = createHashRouter(routes);
+export const router = createHashRouter(routes);
 
 import store from "./store/index.js";
 import { Provider } from "react-redux";

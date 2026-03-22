@@ -8,7 +8,7 @@ const userSlice = createSlice({
     },
     reducers: {
         login(state, action) {
-            console.log('login', action.payload);
+            console.log('login payload', action.payload);
             state.isLoggedIn = true;
             state.userInfo = action.payload;
         },
