@@ -4,6 +4,7 @@ import Login from "./pages/Login";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Products from "./pages/Products";
+import Product from "./pages/Product";
 import Contact from "./pages/Contact";
 import Cart from "./pages/Cart";
 import AdminProducts from "./pages/AdminProducts";
@@ -19,8 +20,8 @@ import { login, logout } from "./store/slice/userSlice";
 // 前台：同步登入狀態，失敗不跳轉
 const frontLoader = async () => {
     try {
-        const res = await userApi.checkUser();
-        if (res.data.success) store.dispatch(login(res.data));
+        // const res = await userApi.checkUser();
+        // if (res.data.success) store.dispatch(login(res.data));
     } catch {
         store.dispatch(logout());
     }
@@ -48,6 +49,7 @@ const routes = [
             { index: true, element: <Home /> },
             { path: "about", element: <About /> },
             { path: "products", element: <Products /> },
+            { path: "product/:id", element: <Product /> },
             { path: "cart", element: <Cart /> },
             { path: "contact", element: <Contact /> },
         ],

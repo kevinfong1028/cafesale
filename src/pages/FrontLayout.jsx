@@ -1,12 +1,13 @@
 import Header from "../component/Header";
-import { Outlet, NavLink } from "react-router";
+import ToastContainer from "../component/ToastContainer";
+import { Outlet } from "react-router";
 
 export default function FrontLayout() {
-    // useState;
     return (
         <>
-            <Header></Header>
-            <Outlet></Outlet>
+            <Header />
+            <Outlet />
+            <ToastContainer />
         </>
     );
 }

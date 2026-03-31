@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import createAsyncMessage from "../store/slice/msgSlice";
+import { createAsyncMessage } from "../store/slice/msgSlice";
 
 export default function useMsg() {
     const dispatch = useDispatch();

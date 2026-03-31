@@ -70,9 +70,10 @@ const userApi = {
 const adminProductApi = {
     getAll: () => service.get(`/api/${VITE_API_PATH}/products/all`),
     getByPage: (params = 1) =>
-        service.get(`/api/${VITE_API_PATH}/admin/products?`, {params}),
-        // service.get(`/api/${VITE_API_PATH}/admin/products?page=${p}`),
-    add: (req) => service.post(`/api/${VITE_API_PATH}/admin/product`, { data: req }),
+        service.get(`/api/${VITE_API_PATH}/admin/products?`, { params }),
+    // service.get(`/api/${VITE_API_PATH}/admin/products?page=${p}`),
+    add: (req) =>
+        service.post(`/api/${VITE_API_PATH}/admin/product`, { data: req }),
     edit: (id, req) =>
         service.put(`/api/${VITE_API_PATH}/admin/product/${id}`, { data: req }),
     delete: (id) => service.delete(`/api/${VITE_API_PATH}/admin/product/${id}`),
@@ -80,10 +81,21 @@ const adminProductApi = {
 
 const productApi = {
     getAll: () => service.get(`/api/${VITE_API_PATH}/products/all`),
-    getByPage: (p = 1) =>
-        service.get(`/api/${VITE_API_PATH}/products?page=${p}`),
-    getById: (id) => service.get(`/api/${VITE_API_PATH}/products/${id}`),
+    getByPage: (params) =>
+        service.get(`/api/${VITE_API_PATH}/products`, { params }),
+    getById: (id) => service.get(`/api/${VITE_API_PATH}/product/${id}`),
 };
 
-export { userApi, adminProductApi, productApi };
+const cartApi = {
+    get: () => service.get(`/api/${VITE_API_PATH}/cart`),
+    add: (req) => service.post(`/api/${VITE_API_PATH}/cart`, { data: req }),
+    edit: (id, req) =>
+        service.put(`/api/${VITE_API_PATH}/cart/${id}`, { data: req }),
+    delete: (id) => service.delete(`/api/${VITE_API_PATH}/cart/${id}`),
+    deleteAll: () => service.delete(`/api/${VITE_API_PATH}/carts`),
+};
+
+
+
+export { userApi, adminProductApi, productApi, cartApi };
 export default service;

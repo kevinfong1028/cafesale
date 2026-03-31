@@ -5,24 +5,14 @@ import {
     forwardRef,
     useImperativeHandle,
 } from "react";
-import axios from "axios";
 import * as bootstrap from "bootstrap";
-const apiBase = import.meta.env.VITE_API_BASE;
-const apiPath = "kevin-react";
 
 const Modal = forwardRef(
     (
-        {
-            modalType,
-            modalMap,
-            closeModal,
-            productForm,
-            adminProductApi,
-            toasting,
-        },
+        { modalType, modalMap, closeModal, productForm, onSubmit, onUpload },
         ref,
     ) => {
-        const [tempData, setTempData] = useState(productForm); // 接收父層的 productForm 作為初始值，也避免set到父層原始物件
+        const [tempData, setTempData] = useState(productForm);
         const [uploadDisabled, setUploadDisabled] = useState(false);
         const lastInputRef = useRef(null);
         const modalDomRef = useRef(null);
@@ -58,22 +48,20 @@ const Modal = forwardRef(
 
         const modalInputChange = (e) => {
             const { name, value, type, checked } = e.target;
-            setTempData((prevData) => ({
-                ...prevData,
+            setTempData((prev) => ({
+                ...prev,
                 [name]: type === "checkbox" ? (checked ? 1 : 0) : value,
             }));
         };
 
-        const addImage = (e) => {
-            console.log("addImage", e);
+        const addImage = () => {
             setTempData((prev) => ({
                 ...prev,
                 imagesUrl: [...prev.imagesUrl, ""],
             }));
         };
 
-        const removeImage = (e) => {
-            console.log("removeImage", e);
+        const removeImage = () => {
             setTempData((prev) => {
                 const newImages = [...prev.imagesUrl];
                 newImages.pop();
@@ -82,11 +70,9 @@ const Modal = forwardRef(
         };
 
         const doImageChange = (index, url) => {
-            // console.log("doImageChange", index, url);
             setTempData((prev) => {
                 const newImages = [...prev.imagesUrl];
                 newImages[index] = url;
-                // 未滿五張就加新的input
                 if (
                     url !== "" &&
                     index === newImages.length - 1 &&
@@ -94,7 +80,6 @@ const Modal = forwardRef(
                 ) {
                     newImages.push("");
                 }
-                // 2張以上，若有空白的則清除
                 if (
                     newImages.length > 1 &&
                     newImages[newImages.length - 1] === ""
@@ -108,111 +93,23 @@ const Modal = forwardRef(
         const uploadFile = async (e) => {
             e.preventDefault();
             const file = e.target.files?.[0];
-            const formData = new FormData();
-            formData.append("file-to-upload", file);
-            console.log("uploadFile", file, formData);
-
-            try {
-                const resp = await axios.post(
-                    `${apiBase}/api/${apiPath}/admin/upload`,
-                    formData,
-                );
-                console.log("resp", resp);
-                if (resp.data.success) {
-                    setTempData((prev) => ({
-                        ...prev,
-                        imageUrl: resp.data.imageUrl,
-                    }));
-                    toasting("圖片上傳成功");
-                }
-            } catch (error) {
-                console.log("error", error);
-            } finally {
-                e.target.value = null;
+            if (!file) return;
+            const imageUrl = await onUpload(file);
+            if (imageUrl) {
+                setTempData((prev) => ({ ...prev, imageUrl }));
             }
+            e.target.value = null;
         };
 
         useEffect(() => {
-            // 加圖片後自動幫input取得焦點
             if (lastInputRef.current) {
                 lastInputRef.current.focus();
             }
-            // 上傳圖片也不得超過總數五張
-            if (tempData.imagesUrl.length === 5) {
-                setUploadDisabled(true);
-            } else {
-                setUploadDisabled(false);
-            }
+            setUploadDisabled(tempData.imagesUrl.length === 5);
         }, [tempData.imagesUrl.length]);
 
-        const productModalRef = useRef(null);
-
         const submitModal = async () => {
-            const modalElement = document.getElementById("productModal");
-
-            productModalRef.current = new bootstrap.Modal(modalElement);
-
-            if (modalType === "create") {
-                // create
-                const req = {
-                    data: {
-                        ...tempData,
-                        origin_price: Number(tempData.origin_price),
-                        price: Number(tempData.price),
-                    },
-                };
-                console.log(modalType, req);
-                const resp = await adminProductApi.post(req);
-                console.log("adminProductApi.post", resp);
-                if (resp.data.success) {
-                    productModalRef.current.hide();
-                    toasting("建立成功");
-                    await adminProductApi.get();
-                } else {
-                    console.log(resp.data.message);
-                    toasting("建立失敗");
-                }
-            } else if (modalType === "edit") {
-                // edit
-                const req = {
-                    // data: {
-                    ...tempData,
-                    origin_price: Number(tempData.origin_price),
-                    price: Number(tempData.price),
-                    // },
-                };
-                console.log(modalType, req);
-                try {
-                    const resp = await adminProductApi.edit(req.id, req);
-                    if (resp.data.success) {
-                        productModalRef.current.hide();
-                        toasting("編輯成功");
-
-                        await adminProductApi.get();
-                    } else {
-                        console.log(resp.data.message);
-                        toasting("編輯失敗");
-                    }
-                } catch (error) {
-                    console.warn("edit faile", error);
-                }
-            } else if (modalType === "delete") {
-                // del
-                const req = {
-                    ...tempData,
-                };
-                console.log(modalType);
-                const resp = await adminProductApi.delete(req.id);
-                if (resp.data.success) {
-                    toasting("刪除成功");
-                    productModalRef.current.hide();
-                    await adminProductApi.get();
-                } else {
-                    console.log(resp.data.message);
-                    toasting("刪除失敗");
-                }
-            }
-            closeModal();
+            await onSubmit(modalType, tempData);
         };
 
         return (
@@ -241,11 +138,9 @@ const Modal = forwardRef(
                             {modalType === "delete" ? (
                                 <div className="row">
                                     <div className="col">
-                                        刪除產品編號{" "}
+                                        刪除產品{" "}
                                         <span className="text-danger">
-                                            {tempData.title
-                                                ? tempData.title
-                                                : "沒選到"}
+                                            {tempData.title || "沒選到"}
                                         </span>
                                         嗎?
                                     </div>
@@ -293,8 +188,7 @@ const Modal = forwardRef(
                                             />
                                         )}
                                         <div>
-                                            {tempData.imagesUrl.length}
-                                            張圖
+                                            {tempData.imagesUrl.length}張圖
                                             <ul>
                                                 {tempData.imagesUrl.map(
                                                     (url, index) => (
@@ -305,9 +199,7 @@ const Modal = forwardRef(
                                                             <input
                                                                 type="text"
                                                                 className="form-control mb-1"
-                                                                placeholder={`圖片網址 ${
-                                                                    index + 1
-                                                                }`}
+                                                                placeholder={`圖片網址 ${index + 1}`}
                                                                 value={url}
                                                                 onChange={(e) =>
                                                                     doImageChange(
@@ -342,7 +234,7 @@ const Modal = forwardRef(
                                                         </li>
                                                     ),
                                                 )}
-                                                <div className="d-flex.justify-content-between">
+                                                <div className="d-flex justify-content-between">
                                                     {tempData.imagesUrl.length <
                                                         5 &&
                                                         tempData.imagesUrl[
@@ -390,9 +282,7 @@ const Modal = forwardRef(
                                                 value={tempData.title}
                                                 onChange={modalInputChange}
                                             />
-                                            {tempData.title}
                                         </div>
-
                                         <div className="row">
                                             <div className="mb-3 col-md-6">
                                                 <label
@@ -429,7 +319,6 @@ const Modal = forwardRef(
                                                 />
                                             </div>
                                         </div>
-
                                         <div className="row">
                                             <div className="mb-3 col-md-6">
                                                 <label
@@ -471,7 +360,6 @@ const Modal = forwardRef(
                                             </div>
                                         </div>
                                         <hr />
-
                                         <div className="mb-3">
                                             <label
                                                 htmlFor="description"
@@ -505,10 +393,7 @@ const Modal = forwardRef(
                                             ></textarea>
                                         </div>
                                         <div className="mb-3">
-                                            <div
-                                                className="form-check d-flex
-                                                        "
-                                            >
+                                            <div className="form-check d-flex">
                                                 <input
                                                     id="is_enabled"
                                                     name="is_enabled"
@@ -549,8 +434,7 @@ const Modal = forwardRef(
                                 } px-5`}
                                 onClick={submitModal}
                             >
-                                確認
-                                {modalType === "delete" ? "刪除" : ""}
+                                確認{modalType === "delete" ? "刪除" : ""}
                             </button>
                         </div>
                     </div>

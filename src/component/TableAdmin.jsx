@@ -1,8 +1,8 @@
 import Pagination from "./Pagination";
 
-const TableAdmin = ({products, pagination, openModal} ) => {
-    console.log("AAA", products);
-    console.log("BBB", pagination);
+const TableAdmin = ({ products, pagination, openModal, getProducts }) => {
+    // console.log("products", products);
+    // console.log("pagination", pagination);
     return (
         <div className="table-container">
             <div className="pagination-info">
@@ -74,7 +74,7 @@ const TableAdmin = ({products, pagination, openModal} ) => {
                     )}
                 </tbody>
             </table>
-            <Pagination pagination={pagination}/>
+            <Pagination pagination={pagination} getProducts={getProducts} />
         </div>
     );
 };

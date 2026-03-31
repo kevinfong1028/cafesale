@@ -1,7 +1,38 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { productApi } from "../apis";
+import { useCart } from "../hooks";
+import { useNavigate } from "react-router";
+
+const apiBase = import.meta.env.VITE_API_BASE;
+const apiPath = "kevin-react";
 
 export default function Products() {
     // useState;
+    const [prouductList, setProductList] = useState([]);
+    const [pagination, setPagination] = useState([]);
+    const navigate = useNavigate();
+    const { addToCart } = useCart();
+
+    const getProducts = async (page = 1, category = "") => {
+        try {
+            const response = await productApi.getByPage({
+                page,
+                category,
+            });
+            console.log("load products", response.data);
+            if (response.data.success) {
+                setProductList(response.data.products);
+                setPagination(response.data.pagination);
+            }
+        } catch (err) {
+            console.error("Error fetching admin products:", err);
+        }
+    };
+
+    useEffect(() => {
+        getProducts();
+    }, []);
+
     return (
         <>
             <div>Admin Products</div>
@@ -71,143 +102,46 @@ export default function Products() {
 
                 {/* <!-- Products Grid --> */}
                 <div className="products-grid">
-                    {/* <!-- Product 1 --> */}
-                    <div className="product-card">
-                        <div className="product-image">☕</div>
-                        <div className="product-info">
-                            <div className="product-origin">衣索比亞</div>
-                            <div className="product-name">耶加雪菲</div>
-                            <div className="product-description">
-                                花香與柑橘調性，清爽怡人
-                            </div>
-                            <div className="product-price">NT$ 680</div>
-                            <div className="product-footer">
-                                <span className="product-rating">
-                                    ⭐⭐⭐⭐⭐ (12)
-                                </span>
-                                <a href="product-detail.html?id=1">
-                                    <button className="btn btn-primary btn-sm">
+                    {prouductList.map((product) => (
+                        <div className="product-card" key={product.id}>
+                            <div className="product-image">☕</div>
+                            <div className="product-info">
+                                <div className="product-origin">
+                                    {product.category}
+                                </div>
+                                <div className="product-name">
+                                    {product.title}
+                                </div>
+                                <div className="product-description">
+                                    {product.description}
+                                </div>
+                                <div className="product-price">
+                                    NT$ {product.price}
+                                </div>
+                                <div className="product-footer">
+                                    <span className="product-rating d-none">
+                                        ⭐⭐⭐⭐⭐ (12)
+                                    </span>
+                                    {/* <a href="product-detail.html?id=1"> */}
+                                    <button
+                                        className="btn btn-primary btn-sm ms-auto"
+                                        onClick={(e) => {
+                                            navigate(`/product/${product.id}`);
+                                        }}
+                                    >
                                         詳情
                                     </button>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* <!-- Product 2 --> */}
-                    <div className="product-card">
-                        <div className="product-image">☕</div>
-                        <div className="product-info">
-                            <div className="product-origin">哥倫比亞</div>
-                            <div className="product-name">薇拉</div>
-                            <div className="product-description">
-                                巧克力與堅果香氣，醇厚順滑
-                            </div>
-                            <div className="product-price">NT$ 620</div>
-                            <div className="product-footer">
-                                <span className="product-rating">
-                                    ⭐⭐⭐⭐⭐ (8)
-                                </span>
-                                <a href="product-detail.html?id=2">
-                                    <button className="btn btn-primary btn-sm">
-                                        詳情
+                                    {/* </a> */}
+                                    <button
+                                        className="btn btn-primary btn-sm"
+                                        onClick={() => addToCart(product.id, product.title)}
+                                    >
+                                        加入購物車
                                     </button>
-                                </a>
+                                </div>
                             </div>
                         </div>
-                    </div>
-
-                    {/* <!-- Product 3 --> */}
-                    <div className="product-card">
-                        <div className="product-image">☕</div>
-                        <div className="product-info">
-                            <div className="product-origin">肯亞</div>
-                            <div className="product-name">AA 頂級</div>
-                            <div className="product-description">
-                                紅莓與黑醋栗香，複雜迷人
-                            </div>
-                            <div className="product-price">NT$ 780</div>
-                            <div className="product-footer">
-                                <span className="product-rating">
-                                    ⭐⭐⭐⭐⭐ (15)
-                                </span>
-                                <a href="product-detail.html?id=3">
-                                    <button className="btn btn-primary btn-sm">
-                                        詳情
-                                    </button>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* <!-- Product 4 --> */}
-                    <div className="product-card">
-                        <div className="product-image">☕</div>
-                        <div className="product-info">
-                            <div className="product-origin">瓜地馬拉</div>
-                            <div className="product-name">安提瓜</div>
-                            <div className="product-description">
-                                煙燻與香料香，厚重飽滿
-                            </div>
-                            <div className="product-price">NT$ 650</div>
-                            <div className="product-footer">
-                                <span className="product-rating">
-                                    ⭐⭐⭐⭐ (10)
-                                </span>
-                                <a href="product-detail.html?id=4">
-                                    <button className="btn btn-primary btn-sm">
-                                        詳情
-                                    </button>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* <!-- Product 5 --> */}
-                    <div className="product-card">
-                        <div className="product-image">☕</div>
-                        <div className="product-info">
-                            <div className="product-origin">巴西</div>
-                            <div className="product-name">塞拉多</div>
-                            <div className="product-description">
-                                焦糖與堅果香，溫暖舒適
-                            </div>
-                            <div className="product-price">NT$ 560</div>
-                            <div className="product-footer">
-                                <span className="product-rating">
-                                    ⭐⭐⭐⭐⭐ (20)
-                                </span>
-                                <a href="product-detail.html?id=5">
-                                    <button className="btn btn-primary btn-sm">
-                                        詳情
-                                    </button>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* <!-- Product 6 --> */}
-                    <div className="product-card">
-                        <div className="product-image">☕</div>
-                        <div className="product-info">
-                            <div className="product-origin">巴拿馬</div>
-                            <div className="product-name">藝妓</div>
-                            <div className="product-description">
-                                花香與熱帶水果，優雅複雜
-                            </div>
-                            <div className="product-price">NT$ 1,580</div>
-                            <div className="product-footer">
-                                <span className="product-rating">
-                                    ⭐⭐⭐⭐⭐ (5)
-                                </span>
-                                <a href="product-detail.html?id=6">
-                                    <button className="btn btn-primary btn-sm">
-                                        詳情
-                                    </button>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+                    ))}
                 </div>
             </div>
         </>
