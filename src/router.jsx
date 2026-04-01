@@ -9,6 +9,7 @@ import Contact from "./pages/Contact";
 import Cart from "./pages/Cart";
 import AdminProducts from "./pages/AdminProducts";
 import Order from "./pages/Order";
+import AdminOrder from "./pages/AdminOrder";
 import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 
@@ -51,6 +52,7 @@ const routes = [
             { path: "products", element: <Products /> },
             { path: "product/:id", element: <Product /> },
             { path: "cart", element: <Cart /> },
+            { path: "order", element: <Order /> },
             { path: "contact", element: <Contact /> },
         ],
     },
@@ -61,7 +63,7 @@ const routes = [
         children: [
             { index: true, element: <Dashboard /> },
             { path: "products", element: <AdminProducts /> },
-            { path: "order", element: <Order /> },
+            { path: "order", element: <AdminOrder /> },
         ],
     },
     {

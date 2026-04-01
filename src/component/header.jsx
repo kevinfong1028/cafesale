@@ -1,18 +1,26 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NavLink } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { login, logout } from "../store/slice/userSlice";
-import { userApi } from "../apis";
+import { setCartCount } from "../store/slice/cartSlice";
+import { userApi, cartApi } from "../apis";
 import axios from "axios";
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
 export default function Header() {
-    // const [isLogin, setIsLogin] = useState(false);
-    const [cartCount, setCartCount] = useState(1);
     const user = useSelector((state) => state.user);
+    const cartCount = useSelector((state) => state.cart.cartCount);
     console.log("user @store", user);
     const storeUser = useSelector((state) => state.user);
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        cartApi.get().then((res) => {
+            if (res.data.success) {
+                dispatch(setCartCount(res.data.data.carts.length));
+            }
+        }).catch(() => {});
+    }, []);
 
     const signOut = async () => {
         try {

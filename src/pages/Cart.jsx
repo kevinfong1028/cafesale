@@ -1,9 +1,13 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
+import { useDispatch } from "react-redux";
 import { cartApi } from "../apis";
+import { setCartCount } from "../store/slice/cartSlice";
 import { scrollToTop } from "../utils";
 
 export default function Cart() {
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
     const [cart, setCart] = useState({ carts: [], total: 0, final_total: 0 });
     const [loading, setLoading] = useState(false);
 
@@ -12,6 +16,7 @@ export default function Cart() {
             const response = await cartApi.get();
             if (response.data.success) {
                 setCart(response.data.data);
+                dispatch(setCartCount(response.data.data.carts.length));
             }
         } catch (err) {
             console.error("Error fetching cart:", err);
@@ -83,7 +88,9 @@ export default function Cart() {
                     <div className="text-center py-5">
                         <div style={{ fontSize: "4rem" }}>🛒</div>
                         <h2 className="h4 fw-bold mt-3 mb-2">購物車是空的</h2>
-                        <p className="text-muted mb-4">快去挑選喜歡的咖啡豆吧！</p>
+                        <p className="text-muted mb-4">
+                            快去挑選喜歡的咖啡豆吧！
+                        </p>
                         <Link to="/products" className="btn btn-primary">
                             前往選購
                         </Link>
@@ -116,15 +123,24 @@ export default function Cart() {
                                             <div className="col-3 col-md-2">
                                                 {item.product?.imageUrl ? (
                                                     <img
-                                                        src={item.product.imageUrl}
+                                                        src={
+                                                            item.product
+                                                                .imageUrl
+                                                        }
                                                         alt={item.product.title}
                                                         className="img-fluid rounded"
-                                                        style={{ aspectRatio: "1", objectFit: "cover" }}
+                                                        style={{
+                                                            aspectRatio: "1",
+                                                            objectFit: "cover",
+                                                        }}
                                                     />
                                                 ) : (
                                                     <div
                                                         className="rounded d-flex align-items-center justify-content-center bg-light"
-                                                        style={{ aspectRatio: "1", fontSize: "2rem" }}
+                                                        style={{
+                                                            aspectRatio: "1",
+                                                            fontSize: "2rem",
+                                                        }}
                                                     >
                                                         ☕
                                                     </div>
@@ -140,7 +156,8 @@ export default function Cart() {
                                                     {item.product?.category}
                                                 </p>
                                                 <p className="small mb-0">
-                                                    NT$ {item.product?.price} / 份
+                                                    NT$ {item.product?.price} /
+                                                    份
                                                 </p>
                                             </div>
 
@@ -150,17 +167,25 @@ export default function Cart() {
                                                     <button
                                                         className="btn btn-light btn-sm"
                                                         onClick={() =>
-                                                            updateQty(item, item.qty - 1)
+                                                            updateQty(
+                                                                item,
+                                                                item.qty - 1,
+                                                            )
                                                         }
                                                         disabled={item.qty <= 1}
                                                     >
                                                         −
                                                     </button>
-                                                    <span className="px-2">{item.qty}</span>
+                                                    <span className="px-2">
+                                                        {item.qty}
+                                                    </span>
                                                     <button
                                                         className="btn btn-light btn-sm"
                                                         onClick={() =>
-                                                            updateQty(item, item.qty + 1)
+                                                            updateQty(
+                                                                item,
+                                                                item.qty + 1,
+                                                            )
                                                         }
                                                     >
                                                         +
@@ -171,11 +196,15 @@ export default function Cart() {
                                             {/* Subtotal + Delete */}
                                             <div className="col-6 col-md-2 text-end">
                                                 <p className="fw-bold mb-1">
-                                                    NT$ {item.final_total || item.total}
+                                                    NT${" "}
+                                                    {item.final_total ||
+                                                        item.total}
                                                 </p>
                                                 <button
                                                     className="btn btn-link text-danger p-0 small"
-                                                    onClick={() => removeItem(item.id)}
+                                                    onClick={() =>
+                                                        removeItem(item.id)
+                                                    }
                                                     disabled={loading}
                                                 >
                                                     移除
@@ -200,7 +229,9 @@ export default function Cart() {
                         <div className="col-lg-4">
                             <div className="card border-0 shadow-sm">
                                 <div className="card-body">
-                                    <h2 className="h5 fw-bold mb-4">訂單摘要</h2>
+                                    <h2 className="h5 fw-bold mb-4">
+                                        訂單摘要
+                                    </h2>
 
                                     <div className="d-flex justify-content-between mb-2">
                                         <span className="text-muted">小計</span>
@@ -211,7 +242,8 @@ export default function Cart() {
                                         <div className="d-flex justify-content-between mb-2 text-danger">
                                             <span>折扣</span>
                                             <span>
-                                                − NT$ {cart.total - cart.final_total}
+                                                − NT${" "}
+                                                {cart.total - cart.final_total}
                                             </span>
                                         </div>
                                     )}
@@ -223,7 +255,10 @@ export default function Cart() {
                                         <span>NT$ {cart.final_total}</span>
                                     </div>
 
-                                    <button className="btn btn-primary w-100">
+                                    <button
+                                        className="btn btn-primary w-100"
+                                        onClick={() => navigate("/order")}
+                                    >
                                         前往結帳
                                     </button>
                                 </div>

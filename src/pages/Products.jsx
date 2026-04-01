@@ -1,37 +1,53 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { productApi } from "../apis";
 import { useCart } from "../hooks";
 import { useNavigate } from "react-router";
 
-const apiBase = import.meta.env.VITE_API_BASE;
-const apiPath = "kevin-react";
-
 export default function Products() {
-    // useState;
-    const [prouductList, setProductList] = useState([]);
-    const [pagination, setPagination] = useState([]);
+    const [allProducts, setAllProducts] = useState([]);
+    const [searchText, setSearchText] = useState("");
+    const [selectedCategories, setSelectedCategories] = useState([]);
     const navigate = useNavigate();
     const { addToCart } = useCart();
 
-    const getProducts = async (page = 1, category = "") => {
+    const getProducts = async () => {
         try {
-            const response = await productApi.getByPage({
-                page,
-                category,
-            });
-            console.log("load products", response.data);
+            const response = await productApi.getAll();
             if (response.data.success) {
-                setProductList(response.data.products);
-                setPagination(response.data.pagination);
+                setAllProducts(response.data.products);
             }
         } catch (err) {
-            console.error("Error fetching admin products:", err);
+            console.error("Error fetching products:", err);
         }
     };
 
     useEffect(() => {
         getProducts();
     }, []);
+
+    const categories = useMemo(() => {
+        return [...new Set(allProducts.map((p) => p.category).filter(Boolean))]; // 預防 category 為 falsy 的情況
+    }, [allProducts]);
+
+    const toggleCategory = (cat) => {
+        setSelectedCategories((prev) =>
+            prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat],
+        );
+    };
+
+    const filteredProducts = useMemo(() => {
+        return allProducts.filter((product) => {
+            const keyword = searchText.toLowerCase();
+            const matchSearch =
+                keyword === "" ||
+                product.title?.toLowerCase().includes(keyword) ||
+                product.description?.toLowerCase().includes(keyword);
+            const matchCategory =
+                selectedCategories.length === 0 ||
+                selectedCategories.includes(product.category);
+            return matchSearch && matchCategory;
+        });
+    }, [allProducts, searchText, selectedCategories]);
 
     return (
         <>
@@ -63,7 +79,9 @@ export default function Products() {
                             <input
                                 type="text"
                                 className="form-control"
-                                placeholder="搜尋產品名稱、產地、風味..."
+                                placeholder="搜尋產品名稱、風味描述..."
+                                value={searchText}
+                                onChange={(e) => setSearchText(e.target.value)}
                             />
                         </div>
                     </div>
@@ -74,35 +92,27 @@ export default function Products() {
                                 烘焙度：
                             </label>
                             <div className="filter-tags">
-                                <button className="filter-tag active">
-                                    全部烘焙
-                                </button>
-                                <button className="filter-tag">淺烘焙</button>
-                                <button className="filter-tag">中烘焙</button>
-                                <button className="filter-tag">中深烘焙</button>
-                                <button className="filter-tag">深烘焙</button>
+                                {categories.map((cat) => (
+                                    <button
+                                        key={cat}
+                                        className={`filter-tag ${selectedCategories.includes(cat) ? "active" : ""}`}
+                                        onClick={() => toggleCategory(cat)}
+                                    >
+                                        {cat}
+                                    </button>
+                                ))}
                             </div>
-                        </div>
-                        <div className="col-12 col-md-6">
-                            <label className="form-label">產地：</label>
-                            <select className="form-select">
-                                <option>全部產地</option>
-                                <option>衣索比亞</option>
-                                <option>哥倫比亞</option>
-                                <option>肯亞</option>
-                                <option>瓜地馬拉</option>
-                                <option>巴西</option>
-                                <option>巴拿馬</option>
-                            </select>
                         </div>
                     </div>
                 </div>
 
-                <p className="text-muted small mb-4">共 6 款產品</p>
+                <p className="text-muted small mb-4">
+                    共 {filteredProducts.length} 款產品
+                </p>
 
                 {/* <!-- Products Grid --> */}
                 <div className="products-grid">
-                    {prouductList.map((product) => (
+                    {filteredProducts.map((product) => (
                         <div className="product-card" key={product.id}>
                             <div className="product-image">☕</div>
                             <div className="product-info">
@@ -134,7 +144,9 @@ export default function Products() {
                                     {/* </a> */}
                                     <button
                                         className="btn btn-primary btn-sm"
-                                        onClick={() => addToCart(product.id, product.title)}
+                                        onClick={() =>
+                                            addToCart(product.id, product.title)
+                                        }
                                     >
                                         加入購物車
                                     </button>

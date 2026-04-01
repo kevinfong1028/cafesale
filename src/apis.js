@@ -95,7 +95,28 @@ const cartApi = {
     deleteAll: () => service.delete(`/api/${VITE_API_PATH}/carts`),
 };
 
+const orderApi = {
+    /** 結帳填寫訂購人資訊 */
+    add: (req) => service.post(`/api/${VITE_API_PATH}/order`, { data: req }),
+    /** 取得訂單資訊-分頁 */
+    getByPage: (params) =>
+        service.get(`/api/${VITE_API_PATH}/orders`, { params }),
+    /** 取得某一筆訂單資訊 */
+    get: (orderId) => service.get(`/api/${VITE_API_PATH}/order/${orderId}`),
+};
 
+const adminOrderApi = {
+    /** 後臺取得訂單資訊 - 分頁 */
+    get: (params) =>
+        service.get(`/api/${VITE_API_PATH}/admin/orders`, { params }),
+    /** 後臺編輯指定訂單 */
+    edit: (id, req) =>
+        service.put(`/api/${VITE_API_PATH}/admin/orders/${id}`, { data: req }),
+    /** 後臺刪除指定訂單 */
+    delete: (id) => service.delete(`/api/${VITE_API_PATH}/admin/orders/${id}`),
+    /** 後臺刪除全部訂單 */
+    deleteAll: () => service.delete(`/api/${VITE_API_PATH}/admin/orders/all`),
+};
 
-export { userApi, adminProductApi, productApi, cartApi };
+export { userApi, adminProductApi, productApi, cartApi, orderApi, adminOrderApi };
 export default service;

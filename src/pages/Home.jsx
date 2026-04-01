@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { productApi} from "../apis";
-import { Outlet, NavLink } from "react-router";
+import { Outlet, NavLink, Link } from "react-router";
 
 export default function Home() {
     // useState;
@@ -106,11 +106,11 @@ export default function Home() {
                     </div>
 
                     <div className="text-center mt-5">
-                        <a href="products.html">
+                        <Link to="/products">
                             <button className="btn btn-secondary">
                                 查看全部產品
                             </button>
-                        </a>
+                        </Link>
                     </div>
                 </div>
             </section>
