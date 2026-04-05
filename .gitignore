@@ -23,6 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 
-# cafe-template
+cafe-template
 # .env
 *.nogit.*
