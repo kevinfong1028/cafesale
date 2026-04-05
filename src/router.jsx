@@ -16,15 +16,15 @@ import NotFound from "./pages/NotFound";
 import { redirect } from "react-router";
 import { userApi } from "./apis";
 import store from "./store";
-import { login, logout } from "./store/slice/userSlice";
+import { login } from "./store/slice/userSlice";
 
 // 前台：同步登入狀態，失敗不跳轉
 const frontLoader = async () => {
     try {
-        // const res = await userApi.checkUser();
-        // if (res.data.success) store.dispatch(login(res.data));
+        const res = await userApi.checkUser();
+        if (res.data.success) store.dispatch(login(res.data));
     } catch {
-        store.dispatch(logout());
+        // 未登入或 token 失效，靜默處理，不強制跳轉
     }
     return null;
 };

@@ -14,6 +14,19 @@ const Modal = forwardRef(
     ) => {
         const [tempData, setTempData] = useState(productForm);
         const [uploadDisabled, setUploadDisabled] = useState(false);
+
+        const initContentFields = {
+            origin: "",
+            roast: "",
+            process: "",
+            altitude: "",
+            harvest: "",
+            sca: "",
+            flavors: "",
+            rating: "",
+            ratingCount: "",
+        };
+        const [contentFields, setContentFields] = useState(initContentFields);
         const lastInputRef = useRef(null);
         const modalDomRef = useRef(null);
         const bsModalRef = useRef(null);
@@ -44,6 +57,22 @@ const Modal = forwardRef(
 
         useEffect(() => {
             setTempData(productForm);
+            try {
+                const parsed = JSON.parse(productForm.content);
+                setContentFields({
+                    origin: parsed.origin || "",
+                    roast: parsed.roast || "",
+                    process: parsed.process || "",
+                    altitude: parsed.altitude || "",
+                    harvest: parsed.harvest || "",
+                    sca: parsed.sca || "",
+                    flavors: Array.isArray(parsed.flavors) ? parsed.flavors.join("、") : "",
+                    rating: parsed.rating ?? "",
+                    ratingCount: parsed.ratingCount ?? "",
+                });
+            } catch {
+                setContentFields(initContentFields);
+            }
         }, [productForm]);
 
         const modalInputChange = (e) => {
@@ -52,6 +81,25 @@ const Modal = forwardRef(
                 ...prev,
                 [name]: type === "checkbox" ? (checked ? 1 : 0) : value,
             }));
+        };
+
+        const contentFieldChange = (e) => {
+            const { name, value } = e.target;
+            if (name === "rating" && !/^[1-5]?$/.test(value)) return;
+            const updated = { ...contentFields, [name]: value };
+            setContentFields(updated);
+            const json = JSON.stringify({
+                origin: updated.origin,
+                roast: updated.roast,
+                process: updated.process,
+                altitude: updated.altitude,
+                harvest: updated.harvest,
+                sca: updated.sca,
+                flavors: updated.flavors.split("、").map((s) => s.trim()).filter(Boolean),
+                rating: Number(updated.rating) || 0,
+                ratingCount: Number(updated.ratingCount) || 0,
+            });
+            setTempData((prev) => ({ ...prev, content: json }));
         };
 
         const addImage = () => {
@@ -376,21 +424,117 @@ const Modal = forwardRef(
                                                 onChange={modalInputChange}
                                             ></textarea>
                                         </div>
-                                        <div className="mb-3">
-                                            <label
-                                                htmlFor="content"
-                                                className="form-label d-block text-start"
-                                            >
-                                                說明內容
+                                        <div className="mb-3 border rounded p-3">
+                                            <label className="form-label d-block text-start fw-bold">
+                                                產品詳細資訊
                                             </label>
-                                            <textarea
-                                                id="content"
-                                                name="content"
-                                                className="form-control"
-                                                placeholder="請輸入說明內容"
-                                                value={tempData.content}
-                                                onChange={modalInputChange}
-                                            ></textarea>
+                                            <div className="row g-2">
+                                                <div className="col-md-6">
+                                                    <label className="form-label small">產地</label>
+                                                    <input
+                                                        name="origin"
+                                                        type="text"
+                                                        className="form-control form-control-sm"
+                                                        placeholder="例：衣索比亞"
+                                                        value={contentFields.origin}
+                                                        onChange={contentFieldChange}
+                                                    />
+                                                </div>
+                                                <div className="col-md-6">
+                                                    <label className="form-label small">烘焙度</label>
+                                                    <input
+                                                        name="roast"
+                                                        type="text"
+                                                        className="form-control form-control-sm"
+                                                        placeholder="例：淺烘焙"
+                                                        value={contentFields.roast}
+                                                        onChange={contentFieldChange}
+                                                    />
+                                                </div>
+                                                <div className="col-md-6">
+                                                    <label className="form-label small">處理法</label>
+                                                    <input
+                                                        name="process"
+                                                        type="text"
+                                                        className="form-control form-control-sm"
+                                                        placeholder="例：水洗"
+                                                        value={contentFields.process}
+                                                        onChange={contentFieldChange}
+                                                    />
+                                                </div>
+                                                <div className="col-md-6">
+                                                    <label className="form-label small">海拔</label>
+                                                    <input
+                                                        name="altitude"
+                                                        type="text"
+                                                        className="form-control form-control-sm"
+                                                        placeholder="例：1,800 - 2,200 m"
+                                                        value={contentFields.altitude}
+                                                        onChange={contentFieldChange}
+                                                    />
+                                                </div>
+                                                <div className="col-md-6">
+                                                    <label className="form-label small">採收季</label>
+                                                    <input
+                                                        name="harvest"
+                                                        type="text"
+                                                        className="form-control form-control-sm"
+                                                        placeholder="例：11月 - 1月"
+                                                        value={contentFields.harvest}
+                                                        onChange={contentFieldChange}
+                                                    />
+                                                </div>
+                                                <div className="col-md-6">
+                                                    <label className="form-label small">SCA 評分</label>
+                                                    <input
+                                                        name="sca"
+                                                        type="text"
+                                                        className="form-control form-control-sm"
+                                                        placeholder="例：85+"
+                                                        value={contentFields.sca}
+                                                        onChange={contentFieldChange}
+                                                    />
+                                                </div>
+                                                <div className="col-12">
+                                                    <label className="form-label small">
+                                                        風味特徵
+                                                        <span className="text-muted ms-1">（以「、」分隔）</span>
+                                                    </label>
+                                                    <input
+                                                        name="flavors"
+                                                        type="text"
+                                                        className="form-control form-control-sm"
+                                                        placeholder="例：茉莉花香、柑橘調性、蜂蜜甜感"
+                                                        value={contentFields.flavors}
+                                                        onChange={contentFieldChange}
+                                                    />
+                                                </div>
+                                                <div className="col-md-6">
+                                                    <label className="form-label small">星星評分（1–5）</label>
+                                                    <input
+                                                        name="rating"
+                                                        type="text"
+                                                        inputMode="numeric"
+                                                        pattern="[1-5]"
+                                                        className="form-control form-control-sm"
+                                                        placeholder="例：4"
+                                                        value={contentFields.rating}
+                                                        onChange={contentFieldChange}
+                                                    />
+                                                </div>
+                                                <div className="col-md-6">
+                                                    <label className="form-label small">評價則數</label>
+                                                    <input
+                                                        name="ratingCount"
+                                                        type="number"
+                                                        min="0"
+                                                        className="form-control form-control-sm"
+                                                        placeholder="例：12"
+                                                        value={contentFields.ratingCount}
+                                                        onChange={contentFieldChange}
+                                                    />
+                                                </div>
+                                            </div>
                                         </div>
                                         <div className="mb-3">
                                             <div className="form-check d-flex">

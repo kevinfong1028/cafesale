@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
-import { cartApi, orderApi } from "../apis";
+import { cartApi, orderApi, payApi } from "../apis";
 import { setCartCount } from "../store/slice/cartSlice";
 import { scrollToTop } from "../utils";
-
+import { useMsg } from "../hooks";
 export default function Order() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -13,6 +13,9 @@ export default function Order() {
     const [loading, setLoading] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
     const [orderId, setOrderId] = useState("");
+    const [startPaying, setStartPaying] = useState(false);
+    const [hasPay, setHasPay] = useState(false);
+    const { showSuccess } = useMsg();
 
     const {
         register,
@@ -34,10 +37,21 @@ export default function Order() {
         getCart();
     }, []);
 
+    const handlePay = async (orderId) => {
+        if (!orderId) return;
+        const res = await payApi.pay(orderId);
+        if (res.data.success) {
+            showSuccess(res.data.message);
+            setHasPay(true);
+            setIsSuccess(true);
+        }
+    };
+
     const onSubmit = async (formData) => {
+        console.log("submiting");
         try {
             setLoading(true);
-            const res = await orderApi.add({
+            const req = {
                 user: {
                     name: formData.name,
                     email: formData.email,
@@ -45,14 +59,18 @@ export default function Order() {
                     address: formData.address,
                 },
                 message: formData.message,
-            });
+            };
+            console.log("送出訂單", req);
+            const res = await orderApi.add(req);
+            console.log("order response", res);
+            // 1. 先付款
             if (res.data.success) {
                 setOrderId(res.data.orderId);
-                await cartApi.deleteAll();
+                // await cartApi.deleteAll();
                 dispatch(setCartCount(0));
-                scrollToTop();
-                setIsSuccess(true);
+                setStartPaying(true);
             }
+
         } catch (err) {
             console.error("Error submitting order:", err);
         } finally {
@@ -60,11 +78,31 @@ export default function Order() {
         }
     };
 
+    if (startPaying && !isSuccess) {
+        return (
+            <div className="container py-5 text-center">
+                <div style={{ fontSize: "4rem" }}>🧾</div>
+                <h2 className="h3 fw-bold mt-3 mb-2">訂單已建立，請完成付款</h2>
+                <p className="text-muted mb-1">
+                    訂單編號：<span className="fw-bold text-dark">{orderId}</span>
+                </p>
+                <p className="text-muted mb-4">請點擊下方按鈕完成付款流程。</p>
+                <button
+                    className="btn btn-danger btn-lg px-5"
+                    disabled={hasPay}
+                    onClick={() => handlePay(orderId)}
+                >
+                    我要付款
+                </button>
+            </div>
+        );
+    }
+
     if (isSuccess) {
         return (
             <div className="container py-5 text-center">
                 <div style={{ fontSize: "4rem" }}>✅</div>
-                <h2 className="h3 fw-bold mt-3 mb-2">訂單已成立！</h2>
+                <h2 className="h3 fw-bold mt-3 mb-2">訂單已成立並完成付款！</h2>
                 <p className="text-muted mb-1">感謝您的購買</p>
                 <p className="text-muted mb-4">
                     訂單編號：
@@ -142,7 +180,8 @@ export default function Order() {
                                         </div>
                                         <div className="col-3 text-end">
                                             <span className="fw-bold">
-                                                NT$ {item.final_total || item.total}
+                                                NT${" "}
+                                                {item.final_total || item.total}
                                             </span>
                                         </div>
                                     </div>
@@ -160,7 +199,8 @@ export default function Order() {
                                     <div className="d-flex justify-content-between mb-2 text-danger">
                                         <span>折扣</span>
                                         <span>
-                                            − NT$ {cart.total - cart.final_total}
+                                            − NT${" "}
+                                            {cart.total - cart.final_total}
                                         </span>
                                     </div>
                                 )}
@@ -182,7 +222,9 @@ export default function Order() {
                                     <div className="mb-3">
                                         <label className="form-label">
                                             姓名{" "}
-                                            <span className="text-danger">*</span>
+                                            <span className="text-danger">
+                                                *
+                                            </span>
                                         </label>
                                         <input
                                             type="text"
@@ -202,7 +244,9 @@ export default function Order() {
                                     <div className="mb-3">
                                         <label className="form-label">
                                             Email{" "}
-                                            <span className="text-danger">*</span>
+                                            <span className="text-danger">
+                                                *
+                                            </span>
                                         </label>
                                         <input
                                             type="email"
@@ -226,7 +270,9 @@ export default function Order() {
                                     <div className="mb-3">
                                         <label className="form-label">
                                             電話{" "}
-                                            <span className="text-danger">*</span>
+                                            <span className="text-danger">
+                                                *
+                                            </span>
                                         </label>
                                         <input
                                             type="tel"
@@ -236,7 +282,8 @@ export default function Order() {
                                                 required: "請輸入電話",
                                                 pattern: {
                                                     value: /^[0-9]{8,10}$/,
-                                                    message: "電話格式不正確（8～10碼數字）",
+                                                    message:
+                                                        "電話格式不正確（8～10碼數字）",
                                                 },
                                             })}
                                         />
@@ -250,7 +297,9 @@ export default function Order() {
                                     <div className="mb-3">
                                         <label className="form-label">
                                             地址{" "}
-                                            <span className="text-danger">*</span>
+                                            <span className="text-danger">
+                                                *
+                                            </span>
                                         </label>
                                         <input
                                             type="text"
@@ -284,8 +333,9 @@ export default function Order() {
                                         className="btn btn-primary w-100"
                                         disabled={loading}
                                     >
-                                        {loading ? "處理中..." : "送出訂單"}
+                                        {loading ? "請先付款" : "送出訂單"}
                                     </button>
+
                                 </form>
                             </div>
                         </div>

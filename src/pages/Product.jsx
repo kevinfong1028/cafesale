@@ -3,7 +3,12 @@ import { productApi } from "../apis";
 import { useCart } from "../hooks";
 import Modal from "../component/Modal";
 import { useNavigate, Link, useParams } from "react-router";
-import { scrollToTop } from "../utils";
+import { scrollToTop, renderStars } from "../utils";
+
+import { Swiper, SwiperSlide } from "swiper/react";
+
+// Import Swiper styles
+import "swiper/css";
 
 const apiBase = import.meta.env.VITE_API_BASE;
 const apiPath = "kevin-react";
@@ -12,6 +17,9 @@ export default function Products() {
     // useState;
     const [product, setProduct] = useState({});
     const [likeProducts, setLikeProducts] = useState([]);
+    const [imageLoading, setImageLoading] = useState(true);
+    const [productContent, setProductContent] = useState({});
+    const [qty, setQty] = useState(1);
     const navigate = useNavigate();
     const { addToCart } = useCart();
     const { id } = useParams();
@@ -23,7 +31,13 @@ export default function Products() {
             const response = await productApi.getById(id);
             console.log("load product id:", id);
             if (response.data.success) {
-                setProduct(response.data.product);
+                const p = response.data.product;
+                setProduct(p);
+                try {
+                    setProductContent(JSON.parse(p.content));
+                } catch {
+                    setProductContent({});
+                }
             }
         } catch (err) {
             console.error("Error fetching admin products:", err);
@@ -48,8 +62,13 @@ export default function Products() {
                     (p) => p.id !== product.id,
                 );
                 // const threeProducts = beyond.slice(-3);
-                const threeProducts = getRandomItems(beyond, 3);
-                console.log(threeProducts);
+                const threeProducts = getRandomItems(beyond, 3).map((p) => {
+                    let parsedContent = {};
+                    try {
+                        parsedContent = JSON.parse(p.content);
+                    } catch {}
+                    return { ...p, parsedContent };
+                });
                 setLikeProducts(threeProducts);
                 // console.log(allProducts);
             }
@@ -58,21 +77,34 @@ export default function Products() {
         }
     };
 
+    const decreaseNum = () => setQty((prev) => Math.max(prev - 1, 1));
+    const increaseNum = () => setQty((prev) => prev + 1);
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        console.log("change", type, checked, name, value);
-        setProduct((prev) => {
-            console.log("prev", prev);
-            return {
-                ...prev,
-                [name]: type === "checkbox" ? (checked ? 1 : 0) : value,
-            };
-        });
+    const mapPopularityBadge = (count = 0) => {
+        if (count >= 101)
+            return (
+                <span className="badge" style={{ backgroundColor: "#C0392B" }}>
+                    火爆
+                </span>
+            );
+        if (count >= 51)
+            return (
+                <span className="badge" style={{ backgroundColor: "#D4784A" }}>
+                    熱銷
+                </span>
+            );
+        return (
+            <span className="badge" style={{ backgroundColor: "#5D7052" }}>
+                關注
+            </span>
+        );
     };
 
     useEffect(() => {
         scrollToTop();
+        setImageLoading(true);
+        setProductContent({});
+        setQty(1);
         getThisProduct(id);
         getAllProducts();
     }, [id]);
@@ -107,84 +139,160 @@ export default function Products() {
                     {/* <!-- Image --> */}
                     <div className="col-lg-6">
                         <div className="detail-image">
+                            {imageLoading && (
+                                <div className="d-flex justify-content-center align-items-center w-100 h-100">
+                                    <div
+                                        className="spinner-grow"
+                                        style={{
+                                            width: "3rem",
+                                            height: "3rem",
+                                        }}
+                                        role="status"
+                                    >
+                                        <span className="visually-hidden">
+                                            載入中...
+                                        </span>
+                                    </div>
+                                </div>
+                            )}
                             <img
                                 src={product.imageUrl}
-                                alt={`pic-${product.title}`}
-                                className=" w-100X"
+                                alt={product.title || ""}
+                                style={{
+                                    display: imageLoading ? "none" : "block",
+                                }}
+                                onLoad={() => setImageLoading(false)}
                             />
                         </div>
+                        {/* <div className="swiper-container mt-2"> */}
+                        <Swiper
+                            spaceBetween={10}
+                            slidesPerView={2}
+                            breakpoints={{
+                                640: {
+                                    slidesPerView: 2,
+                                    spaceBetween: 0,
+                                },
+                                768: {
+                                    slidesPerView: 3,
+                                    spaceBetween: 10,
+                                },
+                                1024: {
+                                    slidesPerView: 4,
+                                    spaceBetween: 10,
+                                },
+                            }}
+                            onSlideChange={() => console.log("slide change")}
+                            onSwiper={(swiper) => console.log(swiper)}
+                        >
+                            {product.imagesUrl &&
+                                product.imagesUrl.map((url, i) => (
+                                    <SwiperSlide key={i}>
+                                        <img
+                                            src={url}
+                                            alt={`${product.title} ${i + 1}`}
+                                            style={{
+                                                width: "100%",
+                                                height: "100%",
+                                                objectFit: "cover",
+                                            }}
+                                        />
+                                    </SwiperSlide>
+                                ))}
+                        </Swiper>
+                        {/* </div> */}
                     </div>
-
                     {/* <!-- Info --> */}
                     <div className="col-lg-6">
                         <div className="mb-3">
-                            <span
-                                className="badge bg-secondary"
-                                style={{
-                                    backgroundColor:
-                                        "var(--terracotta) !important",
-                                }}
-                            >
-                                熱銷
-                            </span>
+                            {mapPopularityBadge(productContent.ratingCount)}
                         </div>
 
                         <h1 className="h2 fw-bold mb-3">{product.title}</h1>
 
                         <div className="detail-meta">
-                            <span>衣索比亞</span>
-                            <span>淺烘焙</span>
-                            <span>💧 水洗</span>
+                            {productContent.origin && (
+                                <span>{productContent.origin}</span>
+                            )}
+                            {productContent.roast && (
+                                <span>{productContent.roast}</span>
+                            )}
+                            {productContent.process && (
+                                <span>💧 {productContent.process}</span>
+                            )}
                         </div>
 
-                        <div className="mb-3">
-                            <span className="text-warning">⭐⭐⭐⭐⭐</span>
-                            <span className="text-muted small">
-                                (12 則評價)
-                            </span>
-                        </div>
+                        {productContent.rating >= 0 &&
+                            productContent.ratingCount > 0 && (
+                                <div className="mb-3">
+                                    <span className="text-warning">
+                                        {renderStars(productContent.rating)}
+                                    </span>
+                                    <span className="text-muted small ms-1">
+                                        ({productContent.ratingCount} 則評價)
+                                    </span>
+                                </div>
+                            )}
 
                         <div className="detail-price">
-                            NT$ <del>{product.origin_price || ""}</del>{" "}
+                            NT${" "}
+                            <del className="fs-4 text-secondary fw-normal fst-italic">
+                                {product.origin_price || ""}
+                            </del>{" "}
                             {product.price}
                         </div>
 
                         <p className="detail-description">
                             {product.description}
                         </p>
-                        {product.content}
 
-                        <div className="detail-features">
-                            <h3 className="h6 fw-bold mb-3">風味特徵</h3>
-                            <ul className="features-list">
-                                <li>茉莉花香</li>
-                                <li>柑橘調性</li>
-                                <li>蜂蜜甜感</li>
-                                <li>清爽怡人</li>
-                            </ul>
-                        </div>
+                        {Array.isArray(productContent.flavors) &&
+                            productContent.flavors.length > 0 && (
+                                <div className="detail-features">
+                                    <h3 className="h6 fw-bold mb-3">
+                                        風味特徵
+                                    </h3>
+                                    <ul className="features-list text-start">
+                                        {productContent.flavors.map((f, i) => (
+                                            <li key={i}>{f}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
 
                         <div className="bg-light p-3 rounded mb-4">
                             <h3 className="h6 fw-bold mb-3">產品資訊</h3>
                             <div className="row g-3 small">
-                                <div className="col-6">
-                                    <strong>海拔：</strong> 1,800 - 2,200 m
-                                </div>
-                                <div className="col-6">
-                                    <strong>採收季：</strong> 11 月 - 1 月
-                                </div>
-                                <div className="col-6">
-                                    <strong>處理法：</strong> 水洗
-                                </div>
-                                <div className="col-6">
-                                    <strong>SCA 評分：</strong> 85+
-                                </div>
-                                <div className="col-6">
+                                {productContent.altitude && (
+                                    <div className="col-6">
+                                        <strong>海拔：</strong>{" "}
+                                        {productContent.altitude}
+                                    </div>
+                                )}
+                                {productContent.harvest && (
+                                    <div className="col-6">
+                                        <strong>採收季：</strong>{" "}
+                                        {productContent.harvest}
+                                    </div>
+                                )}
+                                {productContent.process && (
+                                    <div className="col-6">
+                                        <strong>處理法：</strong>{" "}
+                                        {productContent.process}
+                                    </div>
+                                )}
+                                {productContent.sca && (
+                                    <div className="col-6">
+                                        <strong>SCA 評分：</strong>{" "}
+                                        {productContent.sca}
+                                    </div>
+                                )}
+                                {/* <div className="col-6">
                                     <strong>烘焙日期：</strong> 新鮮烘焙
                                 </div>
                                 <div className="col-6">
                                     <strong>保存期限：</strong> 6 個月
-                                </div>
+                                </div> */}
                             </div>
                         </div>
 
@@ -192,31 +300,48 @@ export default function Products() {
                         <div className="quantity-selector mb-4">
                             <label className="form-label">數量：</label>
                             <div className="quantity-input">
-                                <button className="btn btn-light">−</button>
+                                <button
+                                    className="btn btn-light"
+                                    onClick={decreaseNum}
+                                >
+                                    −
+                                </button>
                                 <input
                                     type="number"
-                                    name="num"
                                     className="form-control"
-                                    value={product.num ?? 1}
+                                    value={qty}
                                     min="1"
                                     style={{
                                         width: "60px",
                                         border: "none",
                                         textAlign: "center",
                                     }}
-                                    onChange={handleInputChange}
+                                    onChange={(e) => setQty(Math.max(Number(e.target.value), 1))}
                                 />
-                                <button className="btn btn-light">+</button>
+                                <button
+                                    className="btn btn-light"
+                                    onClick={increaseNum}
+                                >
+                                    +
+                                </button>
                             </div>
-                            <span className="text-muted small ms-2">
-                                庫存充足 (50 包)
-                            </span>
+                            {product.num != null && (
+                                <span className="text-muted small ms-2">
+                                    庫存：{product.num} 包
+                                </span>
+                            )}
                         </div>
 
                         {/* <!-- Add to Cart Button --> */}
                         <button
                             className="add-to-cart-btn btn btn-primary btn-lg w-100 mb-4"
-                            onClick={() => addToCart(product.id, product.title, product.num ?? 1)}
+                            onClick={() =>
+                                addToCart(
+                                    product.id,
+                                    product.title,
+                                    qty,
+                                )
+                            }
                         >
                             🛒 加入購物車
                         </button>
@@ -303,9 +428,14 @@ export default function Products() {
                                         NT$ {p.price}
                                     </div>
                                     <div className="product-footer">
-                                        <span className="product-rating">
-                                            ⭐⭐⭐⭐⭐ (8)
-                                        </span>
+                                        {p.parsedContent?.ratingCount > 0 && (
+                                            <span className="product-rating">
+                                                {renderStars(
+                                                    p.parsedContent.rating,
+                                                )}{" "}
+                                                ({p.parsedContent.ratingCount})
+                                            </span>
+                                        )}
                                         {/* <button
                                             className="btn btn-primary btn-sm"
                                             onClick={() =>

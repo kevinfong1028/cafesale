@@ -1,12 +1,21 @@
 import { useEffect, useState } from "react";
-import { productApi} from "../apis";
-import { Outlet, NavLink, Link } from "react-router";
+import { productApi } from "../apis";
+import { NavLink, Link } from "react-router";
+import { useNavigate } from "react-router";
+import { useCart } from "../hooks";
 
 export default function Home() {
-    // useState;
+    const [featuredProducts, setFeaturedProducts] = useState([]);
+    const navigate = useNavigate();
+    const { addToCart } = useCart();
+
     useEffect(() => {
         productApi.getAll().then((res) => {
-            console.log("productApi res", res);
+            if (res.data.success) {
+                const products = res.data.products;
+                const shuffled = [...products].sort(() => Math.random() - 0.5);
+                setFeaturedProducts(shuffled.slice(0, 3));
+            }
         });
     }, []);
 
@@ -20,11 +29,11 @@ export default function Home() {
                         從衣索比亞的高原到哥倫比亞的山谷，我們精選全球最優質的咖啡豆，以小批次手工烘焙，為您帶來最純粹的咖啡體驗。
                     </p>
                     <div className="hero-buttons">
-                        <a href="products.html">
+                        <NavLink to="/products">
                             <button className="btn btn-primary">
                                 探索咖啡豆
                             </button>
-                        </a>
+                        </NavLink>
                         <button className="btn btn-secondary">了解我們</button>
                     </div>
                 </div>
@@ -41,68 +50,50 @@ export default function Home() {
                     </h2>
 
                     <div className="products-grid">
-                        {/* <!-- Product 1 --> */}
-                        <div className="product-card">
-                            <div className="product-image">☕</div>
-                            <div className="product-info">
-                                <div className="product-origin">衣索比亞</div>
-                                <div className="product-name">耶加雪菲</div>
-                                <div className="product-description">
-                                    花香與柑橘調性，清爽怡人
+                        {featuredProducts.map((product) => (
+                            <div className="product-card" key={product.id}>
+                                <div className="product-image">
+                                    <img src={product.imageUrl} alt={product.title} />
                                 </div>
-                                <div className="product-price">NT$ 680</div>
-                                <div className="product-footer">
-                                    <span className="product-rating">
-                                        ⭐⭐⭐⭐⭐ (12)
-                                    </span>
-                                    <button className="btn btn-primary btn-sm">
-                                        加入購物車
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* <!-- Product 2 --> */}
-                        <div className="product-card">
-                            <div className="product-image">☕</div>
-                            <div className="product-info">
-                                <div className="product-origin">哥倫比亞</div>
-                                <div className="product-name">薇拉</div>
-                                <div className="product-description">
-                                    巧克力與堅果香氣，醇厚順滑
-                                </div>
-                                <div className="product-price">NT$ 620</div>
-                                <div className="product-footer">
-                                    <span className="product-rating">
-                                        ⭐⭐⭐⭐⭐ (8)
-                                    </span>
-                                    <button className="btn btn-primary btn-sm">
-                                        加入購物車
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* <!-- Product 3 --> */}
-                        <div className="product-card">
-                            <div className="product-image">☕</div>
-                            <div className="product-info">
-                                <div className="product-origin">肯亞</div>
-                                <div className="product-name">AA 頂級</div>
-                                <div className="product-description">
-                                    紅莓與黑醋栗香，複雜迷人
-                                </div>
-                                <div className="product-price">NT$ 780</div>
-                                <div className="product-footer">
-                                    <span className="product-rating">
-                                        ⭐⭐⭐⭐⭐ (15)
-                                    </span>
-                                    <button className="btn btn-primary btn-sm">
-                                        加入購物車
-                                    </button>
+                                <div className="product-info">
+                                    <div className="product-origin">
+                                        {product.category}
+                                    </div>
+                                    <div className="product-name">
+                                        {product.title}
+                                    </div>
+                                    <div className="product-description">
+                                        {product.description}
+                                    </div>
+                                    <div className="product-price">
+                                        NT$ {product.price}
+                                    </div>
+                                    <div className="product-footer">
+                                        <button
+                                            className="btn btn-primary btn-sm ms-auto"
+                                            onClick={() =>
+                                                navigate(
+                                                    `/product/${product.id}`,
+                                                )
+                                            }
+                                        >
+                                            詳情
+                                        </button>
+                                        <button
+                                            className="btn btn-primary btn-sm"
+                                            onClick={() =>
+                                                addToCart(
+                                                    product.id,
+                                                    product.title,
+                                                )
+                                            }
+                                        >
+                                            加入購物車
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        ))}
                     </div>
 
                     <div className="text-center mt-5">
@@ -181,61 +172,85 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* <!-- Footer --> */}
-            <footer>
+            {/* <!-- Testimonials Section --> */}
+            <section className="py-5">
                 <div className="container">
-                    <div className="row g-4 mb-4">
-                        <div className="col-md-6 col-lg-3">
-                            <h5>Bean & Brew</h5>
-                            <p className="small" style={{ lineHeight: "1.8" }}>
-                                致力於帶給咖啡愛好者最純粹的精品咖啡體驗。每一顆豆都經過精心挑選與烘焙。
-                            </p>
+                    <h2
+                        className="text-center mb-5"
+                        style={{ fontSize: "2rem", fontWeight: "700" }}
+                    >
+                        顧客怎麼說
+                    </h2>
+                    <div className="row g-4">
+                        <div className="col-md-4">
+                            <div className="testimonial-card">
+                                <div className="testimonial-rating">
+                                    ⭐⭐⭐⭐⭐
+                                </div>
+                                <p className="testimonial-text">
+                                    「耶加雪菲的花香與柑橘調性真的讓我驚艷，第一次喝到這麼清爽又有層次的咖啡。每次沖泡都像在享受一個小儀式。」
+                                </p>
+                                <div className="testimonial-author">
+                                    <div className="testimonial-avatar">陳</div>
+                                    <div>
+                                        <div className="testimonial-name">
+                                            陳小姐
+                                        </div>
+                                        <div className="testimonial-location">
+                                            台北市
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div className="col-md-6 col-lg-3">
-                            <h5>快速連結</h5>
-                            <ul className="list-unstyled small">
-                                <li>
-                                    <a href="index.html">首頁</a>
-                                </li>
-                                <li>
-                                    <a href="products.html">產品</a>
-                                </li>
-                                <li>
-                                    <a href="about.html">關於我們</a>
-                                </li>
-                                <li>
-                                    <a href="contact.html">聯絡我們</a>
-                                </li>
-                            </ul>
+                        <div className="col-md-4">
+                            <div className="testimonial-card">
+                                <div className="testimonial-rating">
+                                    ⭐⭐⭐⭐⭐
+                                </div>
+                                <p className="testimonial-text">
+                                    「每次收到豆子都超新鮮，香氣撲鼻。比起超市的咖啡豆，真的是完全不同的世界。而且包裝很細心，非常值得。」
+                                </p>
+                                <div className="testimonial-author">
+                                    <div className="testimonial-avatar">王</div>
+                                    <div>
+                                        <div className="testimonial-name">
+                                            王先生
+                                        </div>
+                                        <div className="testimonial-location">
+                                            新竹市
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div className="col-md-6 col-lg-3">
-                            <h5>聯絡方式</h5>
-                            <ul className="list-unstyled small">
-                                <li>📧 info@beanbrew.com</li>
-                                <li>📱 (02) 1234-5678</li>
-                                <li>📍 台北市中山區</li>
-                            </ul>
-                        </div>
-                        <div className="col-md-6 col-lg-3">
-                            <h5>追蹤我們</h5>
-                            <ul className="list-unstyled small">
-                                <li>
-                                    <a href="#">Facebook</a>
-                                </li>
-                                <li>
-                                    <a href="#">Instagram</a>
-                                </li>
-                                <li>
-                                    <a href="#">Twitter</a>
-                                </li>
-                            </ul>
+                        <div className="col-md-4">
+                            <div className="testimonial-card">
+                                <div className="testimonial-rating">
+                                    ⭐⭐⭐⭐⭐
+                                </div>
+                                <p className="testimonial-text">
+                                    「肯亞 AA
+                                    的紅莓風味讓我一試成主顧，品質穩定又可靠。每個月固定訂購，已經回購超過半年了，強力推薦！」
+                                </p>
+                                <div className="testimonial-author">
+                                    <div className="testimonial-avatar">林</div>
+                                    <div>
+                                        <div className="testimonial-name">
+                                            林先生
+                                        </div>
+                                        <div className="testimonial-location">
+                                            台中市
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div className="footer-bottom">
-                    <p>&copy; 2024 Bean & Brew. All rights reserved.</p>
-                </div>
-            </footer>
+            </section>
+
+            {/* <!-- Footer --> */}
         </>
     );
 }

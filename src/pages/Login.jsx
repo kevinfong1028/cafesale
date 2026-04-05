@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { userApi } from "../apis";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useDispatch } from "react-redux";
 import {login, logout} from "../store/slice/userSlice";
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
@@ -103,14 +103,14 @@ export default function Login() {
                             />
                         </div>
 
-                        <div className="remember-me">
+                        {/* <div className="remember-me">
                             <input
                                 type="checkbox"
                                 id="rememberMe"
                                 name="rememberMe"
                             />
                             <label htmlFor="rememberMe">記住我</label>
-                        </div>
+                        </div> */}
 
                         <button type="submit" className="login-btn">
                             登入
@@ -136,11 +136,9 @@ export default function Login() {
                             lineHeight: "1.6",
                         }}
                     >
-                        <strong style={{ color: "#4B7C50" }}>測試帳號：</strong>
-                        <br />
-                        Email: admin@beanbrew.com
-                        <br />
-                        Password: admin123
+                        <div className="forgot-password">
+                            <Link to="/">回首頁</Link>
+                        </div>
                     </div>
 
                 </div>

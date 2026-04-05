@@ -1,13 +1,21 @@
 import Pagination from "./Pagination";
 
-const TableAdmin = ({ products, pagination, openModal, getProducts }) => {
-    // console.log("products", products);
+const TableAdmin = ({
+    products,
+    productTotal,
+    pagination,
+    openModal,
+    getProducts,
+}) => {
+    console.log("products", products);
     // console.log("pagination", pagination);
+    // const productCount = useSelector((state) => state.product.count);
     return (
         <div className="table-container">
             <div className="pagination-info">
                 <span className="pagination-info-text">
-                    顯示 <strong>1-10</strong> 筆，共 <strong>50</strong> 筆
+                    顯示 <strong>1-{products.length}</strong> 筆，共{" "}
+                    <strong>{productTotal}</strong> 筆
                 </span>
             </div>
             <table className="responsive-table">
@@ -31,7 +39,7 @@ const TableAdmin = ({ products, pagination, openModal, getProducts }) => {
                     {products ? (
                         products.map((product, index) => (
                             <tr key={product.id}>
-                                <td data-label="編號">{index}</td>
+                                <td data-label="編號">{index + 1}</td>
                                 <td data-label="品項">{product.title}</td>
                                 <td data-label="種類">{product.category}</td>
                                 <td data-label="售價" className="">

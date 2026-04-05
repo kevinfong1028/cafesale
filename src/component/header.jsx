@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { login, logout } from "../store/slice/userSlice";
 import { setCartCount } from "../store/slice/cartSlice";
@@ -8,6 +8,7 @@ import axios from "axios";
 const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
 export default function Header() {
+    const navigate = useNavigate();
     const user = useSelector((state) => state.user);
     const cartCount = useSelector((state) => state.cart.cartCount);
     console.log("user @store", user);
@@ -32,6 +33,7 @@ export default function Header() {
             document.cookie =
                 "hexToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
             dispatch(logout());
+            navigate("/");
         }
         return;
 
@@ -62,9 +64,9 @@ export default function Header() {
         <header className="sticky-top">
             <nav className="navbar navbar-expand-lg navbar-light bg-white">
                 <div className="container-fluid">
-                    <a className="navbar-brand" href="index.html">
+                    <NavLink className="navbar-brand" to="/">
                         Bean & Brew
-                    </a>
+                    </NavLink>
                     <button
                         className="navbar-toggler"
                         type="button"
@@ -83,34 +85,34 @@ export default function Header() {
                             </li>
                             <li>
                                 <NavLink className="nav-link" to="/about">
-                                    about
+                                    關於B&B
                                 </NavLink>
                             </li>
                             <li>
                                 <NavLink className="nav-link" to="/products">
-                                    Products
+                                    商品
                                 </NavLink>
                             </li>
                             <li>
                                 <NavLink className="nav-link" to="/cart">
-                                    Cart
+                                    購物車
                                 </NavLink>
                             </li>
                             <li>
                                 <NavLink className="nav-link" to="/contact">
-                                    Contact
+                                    聯絡我們
                                 </NavLink>
                             </li>
                             {user.isLoggedIn && (
                                 <>
-                                    <li>
+                                    {/* <li>
                                         <NavLink
                                             className="nav-link"
                                             to="/admin"
                                         >
                                             Dashboard
                                         </NavLink>
-                                    </li>
+                                    </li> */}
                                     <li>
                                         <NavLink
                                             className="nav-link"
@@ -124,7 +126,7 @@ export default function Header() {
                                             className="nav-link"
                                             to="/admin/order"
                                         >
-                                            Order
+                                            訂單
                                         </NavLink>
                                     </li>
                                 </>

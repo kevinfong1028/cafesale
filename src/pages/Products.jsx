@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { productApi } from "../apis";
 import { useCart } from "../hooks";
 import { useNavigate } from "react-router";
+import { renderStars } from "../utils";
 
 export default function Products() {
     const [allProducts, setAllProducts] = useState([]);
@@ -89,7 +90,7 @@ export default function Products() {
                     <div className="row g-3">
                         <div className="col-12">
                             <label className="form-label d-block">
-                                烘焙度：
+                                產區：
                             </label>
                             <div className="filter-tags">
                                 {categories.map((cat) => (
@@ -112,9 +113,12 @@ export default function Products() {
 
                 {/* <!-- Products Grid --> */}
                 <div className="products-grid">
-                    {filteredProducts.map((product) => (
+                    {filteredProducts.map((product) => {
+                        let parsedContent = {};
+                        try { parsedContent = JSON.parse(product.content); } catch {}
+                        return (
                         <div className="product-card" key={product.id}>
-                            <div className="product-image">☕</div>
+                            <div className="product-image"><img src={product.imageUrl} alt={product.title} /></div>
                             <div className="product-info">
                                 <div className="product-origin">
                                     {product.category}
@@ -129,9 +133,11 @@ export default function Products() {
                                     NT$ {product.price}
                                 </div>
                                 <div className="product-footer">
-                                    <span className="product-rating d-none">
-                                        ⭐⭐⭐⭐⭐ (12)
-                                    </span>
+                                    {parsedContent.ratingCount > 0 && (
+                                        <span className="product-rating">
+                                            {renderStars(parsedContent.rating)} ({parsedContent.ratingCount})
+                                        </span>
+                                    )}
                                     {/* <a href="product-detail.html?id=1"> */}
                                     <button
                                         className="btn btn-primary btn-sm ms-auto"
@@ -153,7 +159,8 @@ export default function Products() {
                                 </div>
                             </div>
                         </div>
-                    ))}
+                    );
+                    })}
                 </div>
             </div>
         </>

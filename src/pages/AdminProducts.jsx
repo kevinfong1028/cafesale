@@ -27,6 +27,7 @@ export default function AdminProducts() {
     };
 
     const [productForm, setProductForm] = useState(initForm);
+    const [productTotal, setProductTotal] = useState(0);
 
     const pagiObj = {
         total_pages: 2,
@@ -37,9 +38,23 @@ export default function AdminProducts() {
     };
     const [pagination, setPagination] = useState(pagiObj);
 
+    const getAllProducts = async (pageNum) => {
+        try {
+            const response = await adminProductApi.getAll();
+            console.log("get all", response);
+            if(response.data.success){
+                setProductTotal(response.data.products.length);
+            }
+        } catch (error) {
+            console.error("Error fetching admin products:", error);
+        }
+    };
+
     const getProducts = async (pageNum) => {
         try {
-            const response = await adminProductApi.getByPage({ page: pageNum ?? 1 });
+            const response = await adminProductApi.getByPage({
+                page: pageNum ?? 1,
+            });
             if (response.data.success) {
                 setProducts(response.data.products);
                 setPagination(response.data.pagination);
@@ -51,6 +66,7 @@ export default function AdminProducts() {
 
     useEffect(() => {
         getProducts();
+        getAllProducts();
     }, []);
 
     const openModal = (product, type) => {
@@ -84,13 +100,13 @@ export default function AdminProducts() {
     };
 
     const handleSubmit = async (type, data) => {
-        console.log('handleSubmit', type, data)
+        console.log("handleSubmit", type, data);
         if (type === "create") {
             const req = {
                 // data: {
-                    ...data,
-                    origin_price: Number(data.origin_price),
-                    price: Number(data.price),
+                ...data,
+                origin_price: Number(data.origin_price),
+                price: Number(data.price),
                 // },
             };
             // delete req.id
@@ -138,6 +154,7 @@ export default function AdminProducts() {
                         </p>
                         <TableAdmin
                             products={products}
+                            productTotal={productTotal}
                             pagination={pagination}
                             openModal={openModal}
                             getProducts={getProducts}

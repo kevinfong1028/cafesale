@@ -111,12 +111,24 @@ const adminOrderApi = {
         service.get(`/api/${VITE_API_PATH}/admin/orders`, { params }),
     /** 後臺編輯指定訂單 */
     edit: (id, req) =>
-        service.put(`/api/${VITE_API_PATH}/admin/orders/${id}`, { data: req }),
+        service.put(`/api/${VITE_API_PATH}/admin/order/${id}`, { data: req }),
     /** 後臺刪除指定訂單 */
-    delete: (id) => service.delete(`/api/${VITE_API_PATH}/admin/orders/${id}`),
+    delete: (id) => service.delete(`/api/${VITE_API_PATH}/admin/order/${id}`),
     /** 後臺刪除全部訂單 */
     deleteAll: () => service.delete(`/api/${VITE_API_PATH}/admin/orders/all`),
 };
 
-export { userApi, adminProductApi, productApi, cartApi, orderApi, adminOrderApi };
+const payApi = {
+    pay: (id) => service.post(`/api/${VITE_API_PATH}/pay/${id}`),
+};
+
+export {
+    userApi,
+    adminProductApi,
+    productApi,
+    cartApi,
+    orderApi,
+    adminOrderApi,
+    payApi,
+};
 export default service;

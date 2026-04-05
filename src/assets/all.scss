@@ -350,8 +350,46 @@ ul {
 }
 
 .detail-image {
+    overflow: hidden;
     img {
+        width: 100%;
         height: 100%;
         object-fit: cover;
+        object-position: center 25%;
     }
+}
+
+// .swiper-container {
+.swiper.swiper-initialized.swiper-horizontal {
+    margin-top: 10px;
+    width: 100%;
+    height: 150px;
+    aspect-ratio: 10 / 3;
+    // height: 100%;
+    .swiper-wrapper {
+        &:hover {
+            cursor: grab;
+        }
+        &:active {
+            cursor: grabbing;
+        }
+        display: flex;
+        height: 100%;
+        .swiper-slide {
+            overflow: hidden;
+            height: 100%;
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                object-position: center 25%;
+            }
+        }
+    }
+}
+// }
+.img-fuild {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
