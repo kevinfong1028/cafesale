@@ -7,32 +7,32 @@ import {
 } from "react";
 import * as bootstrap from "bootstrap";
 
+const initContentFields = {
+    origin: "",
+    roast: "",
+    process: "",
+    altitude: "",
+    harvest: "",
+    sca: "",
+    flavors: "",
+    rating: "",
+    ratingCount: "",
+};
+
 const Modal = forwardRef(
     (
         { modalType, modalMap, closeModal, productForm, onSubmit, onUpload },
         ref,
     ) => {
         const [tempData, setTempData] = useState(productForm);
-        const [uploadDisabled, setUploadDisabled] = useState(false);
-
-        const initContentFields = {
-            origin: "",
-            roast: "",
-            process: "",
-            altitude: "",
-            harvest: "",
-            sca: "",
-            flavors: "",
-            rating: "",
-            ratingCount: "",
-        };
         const [contentFields, setContentFields] = useState(initContentFields);
         const lastInputRef = useRef(null);
         const modalDomRef = useRef(null);
         const bsModalRef = useRef(null);
 
         useEffect(() => {
-            bsModalRef.current = new bootstrap.Modal(modalDomRef.current, {
+            const modalEl = modalDomRef.current;
+            bsModalRef.current = new bootstrap.Modal(modalEl, {
                 keyboard: true,
             });
             const handleHide = () => {
@@ -40,12 +40,9 @@ const Modal = forwardRef(
                     document.activeElement.blur();
                 }
             };
-            modalDomRef.current.addEventListener("hide.bs.modal", handleHide);
+            modalEl.addEventListener("hide.bs.modal", handleHide);
             return () => {
-                modalDomRef.current?.removeEventListener(
-                    "hide.bs.modal",
-                    handleHide,
-                );
+                modalEl.removeEventListener("hide.bs.modal", handleHide);
                 bsModalRef.current?.dispose();
             };
         }, []);
@@ -149,11 +146,12 @@ const Modal = forwardRef(
             e.target.value = null;
         };
 
+        const uploadDisabled = tempData.imagesUrl.length === 5;
+
         useEffect(() => {
             if (lastInputRef.current) {
                 lastInputRef.current.focus();
             }
-            setUploadDisabled(tempData.imagesUrl.length === 5);
         }, [tempData.imagesUrl.length]);
 
         const submitModal = async () => {

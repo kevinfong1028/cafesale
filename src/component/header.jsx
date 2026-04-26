@@ -1,18 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { NavLink, useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
-import { login, logout } from "../store/slice/userSlice";
+import { logout } from "../store/slice/userSlice";
 import { setCartCount } from "../store/slice/cartSlice";
 import { userApi, cartApi } from "../apis";
-import axios from "axios";
-const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
 
 export default function Header() {
     const navigate = useNavigate();
     const user = useSelector((state) => state.user);
     const cartCount = useSelector((state) => state.cart.cartCount);
-    console.log("user @store", user);
-    const storeUser = useSelector((state) => state.user);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -21,7 +17,7 @@ export default function Header() {
                 dispatch(setCartCount(res.data.data.carts.length));
             }
         }).catch(() => {});
-    }, []);
+    }, [dispatch]);
 
     const signOut = async () => {
         try {
@@ -35,29 +31,6 @@ export default function Header() {
             dispatch(logout());
             navigate("/");
         }
-        return;
-
-        userApi
-            .logout()
-            .then((res) => {
-                console.log("logout res", res);
-                return;
-
-                if (res.data.success) {
-                    // 登出成功
-                    console.log("登出成功:", res.data);
-                    document.cookie =
-                        "hexToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-                    // setIsLogin(false);
-                    dispatch(logout());
-                } else {
-                    // 登出失敗
-                    console.error("登出失敗:", res.data?.message);
-                }
-            })
-            .catch((error) => {
-                console.error("登出過程中發生錯誤:", error);
-            });
     };
 
     return (

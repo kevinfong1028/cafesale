@@ -11,18 +11,17 @@ export default function Products() {
     const navigate = useNavigate();
     const { addToCart } = useCart();
 
-    const getProducts = async () => {
-        try {
-            const response = await productApi.getAll();
-            if (response.data.success) {
-                setAllProducts(response.data.products);
-            }
-        } catch (err) {
-            console.error("Error fetching products:", err);
-        }
-    };
-
     useEffect(() => {
+        const getProducts = async () => {
+            try {
+                const response = await productApi.getAll();
+                if (response.data.success) {
+                    setAllProducts(response.data.products);
+                }
+            } catch (err) {
+                console.error("Error fetching products:", err);
+            }
+        };
         getProducts();
     }, []);
 
@@ -115,7 +114,7 @@ export default function Products() {
                 <div className="products-grid">
                     {filteredProducts.map((product) => {
                         let parsedContent = {};
-                        try { parsedContent = JSON.parse(product.content); } catch {}
+                        try { parsedContent = JSON.parse(product.content); } catch { /* invalid JSON */ }
                         return (
                         <div className="product-card" key={product.id}>
                             <div className="product-image"><img src={product.imageUrl} alt={product.title} /></div>
@@ -141,7 +140,7 @@ export default function Products() {
                                     {/* <a href="product-detail.html?id=1"> */}
                                     <button
                                         className="btn btn-primary btn-sm ms-auto"
-                                        onClick={(e) => {
+                                        onClick={() => {
                                             navigate(`/product/${product.id}`);
                                         }}
                                     >

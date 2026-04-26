@@ -14,7 +14,8 @@ export default function AdminOrder() {
     const bsModalRef = useRef(null);
 
     useEffect(() => {
-        bsModalRef.current = new bootstrap.Modal(modalRef.current, {
+        const modalEl = modalRef.current;
+        bsModalRef.current = new bootstrap.Modal(modalEl, {
             keyboard: true,
         });
         const handleHide = () => {
@@ -22,9 +23,9 @@ export default function AdminOrder() {
                 document.activeElement.blur();
             }
         };
-        modalRef.current.addEventListener("hide.bs.modal", handleHide);
+        modalEl.addEventListener("hide.bs.modal", handleHide);
         return () => {
-            modalRef.current?.removeEventListener("hide.bs.modal", handleHide);
+            modalEl.removeEventListener("hide.bs.modal", handleHide);
             bsModalRef.current?.dispose();
         };
     }, []);

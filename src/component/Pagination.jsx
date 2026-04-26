@@ -7,7 +7,7 @@ const Pagination = ({pagination, getProducts}) => {
                         type="button"
                         href="javascript:void(0)"
                         className="pagination-link prev"
-                        onClick={(e) =>
+                        onClick={() =>
                             getProducts(pagination.current_page - 1)
                         }
                     >
@@ -22,7 +22,7 @@ const Pagination = ({pagination, getProducts}) => {
                             type="button"
                             href="javascript:void(0)"
                             className={`pagination-link ${pagination.current_page === p + 1 && "active"}`}
-                            onClick={(e) => getProducts(p + 1)}
+                            onClick={() => getProducts(p + 1)}
                         >
                             {p + 1}
                         </button>
@@ -35,7 +35,7 @@ const Pagination = ({pagination, getProducts}) => {
                         type="button"
                         href="javascript:void(0)"
                         className="pagination-link next"
-                        onClick={(e) =>
+                        onClick={() =>
                             getProducts(pagination.current_page + 1)
                         }
                     >

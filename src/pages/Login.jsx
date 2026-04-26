@@ -1,22 +1,16 @@
-import { useState } from "react";
 import { userApi } from "../apis";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
 import { useDispatch } from "react-redux";
-import {login, logout} from "../store/slice/userSlice";
-const { VITE_API_BASE, VITE_API_PATH } = import.meta.env;
+import { login } from "../store/slice/userSlice";
 
 export default function Login() {
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [rememberMe, setRememberMe] = useState(false);
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const {
         register,
         handleSubmit,
-        formState: { errors },
     } = useForm({
         defaultValues: {
             username: "sbdrumer1028@gmail.com",

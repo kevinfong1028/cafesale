@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { productApi } from "../apis";
 import { useCart } from "../hooks";
-import Modal from "../component/Modal";
 import { useNavigate, Link, useParams } from "react-router";
 import { scrollToTop, renderStars } from "../utils";
 
@@ -9,9 +8,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 
 // Import Swiper styles
 import "swiper/css";
-
-const apiBase = import.meta.env.VITE_API_BASE;
-const apiPath = "kevin-react";
 
 export default function Products() {
     // useState;
@@ -23,60 +19,6 @@ export default function Products() {
     const navigate = useNavigate();
     const { addToCart } = useCart();
     const { id } = useParams();
-    console.log("id =====", id);
-    if (!id) return;
-
-    const getThisProduct = async (id) => {
-        try {
-            const response = await productApi.getById(id);
-            console.log("load product id:", id);
-            if (response.data.success) {
-                const p = response.data.product;
-                setProduct(p);
-                try {
-                    setProductContent(JSON.parse(p.content));
-                } catch {
-                    setProductContent({});
-                }
-            }
-        } catch (err) {
-            console.error("Error fetching admin products:", err);
-        }
-    };
-
-    const getRandomItems = (arr, n) => {
-        const randomIndexes = new Set(); // 做三個不重複序號
-        while (arr.length > n && randomIndexes.size < n) {
-            randomIndexes.add(Math.floor(Math.random() * arr.length));
-        }
-        return [...randomIndexes].map((index) => arr[index]); // set解構後才是array
-    };
-
-    const getAllProducts = async () => {
-        try {
-            const response = await productApi.getAll();
-            console.log("all products:", response);
-            if (response.data.success) {
-                console.log(response.data.products);
-                const beyond = response.data.products.filter(
-                    (p) => p.id !== product.id,
-                );
-                // const threeProducts = beyond.slice(-3);
-                const threeProducts = getRandomItems(beyond, 3).map((p) => {
-                    let parsedContent = {};
-                    try {
-                        parsedContent = JSON.parse(p.content);
-                    } catch {}
-                    return { ...p, parsedContent };
-                });
-                setLikeProducts(threeProducts);
-                // console.log(allProducts);
-            }
-        } catch (err) {
-            console.error("Error fetching admin products:", err);
-        }
-    };
-
     const decreaseNum = () => setQty((prev) => Math.max(prev - 1, 1));
     const increaseNum = () => setQty((prev) => prev + 1);
 
@@ -101,11 +43,61 @@ export default function Products() {
     };
 
     useEffect(() => {
+        if (!id) return;
+
+        const getRandomItems = (arr, n) => {
+            const randomIndexes = new Set();
+            while (arr.length > n && randomIndexes.size < n) {
+                randomIndexes.add(Math.floor(Math.random() * arr.length));
+            }
+            return [...randomIndexes].map((index) => arr[index]);
+        };
+
+        const getThisProduct = async () => {
+            try {
+                const response = await productApi.getById(id);
+                if (response.data.success) {
+                    const p = response.data.product;
+                    setProduct(p);
+                    try {
+                        setProductContent(JSON.parse(p.content));
+                    } catch {
+                        setProductContent({});
+                    }
+                }
+            } catch (err) {
+                console.error("Error fetching product:", err);
+            }
+        };
+
+        const getAllProducts = async () => {
+            try {
+                const response = await productApi.getAll();
+                if (response.data.success) {
+                    const beyond = response.data.products.filter(
+                        (p) => p.id !== id,
+                    );
+                    const threeProducts = getRandomItems(beyond, 3).map((p) => {
+                        let parsedContent = {};
+                        try {
+                            parsedContent = JSON.parse(p.content);
+                        } catch {
+                            // invalid JSON, leave parsedContent as {}
+                        }
+                        return { ...p, parsedContent };
+                    });
+                    setLikeProducts(threeProducts);
+                }
+            } catch (err) {
+                console.error("Error fetching products:", err);
+            }
+        };
+
         scrollToTop();
         setImageLoading(true);
         setProductContent({});
         setQty(1);
-        getThisProduct(id);
+        getThisProduct();
         getAllProducts();
     }, [id]);
 

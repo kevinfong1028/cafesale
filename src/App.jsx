@@ -1,8 +1,6 @@
-import { useState } from "react";
-import { Outlet, NavLink } from "react-router";
+import { Outlet } from "react-router";
 
 function App() {
-    const [count, setCount] = useState(0);
 
     return (
         <>

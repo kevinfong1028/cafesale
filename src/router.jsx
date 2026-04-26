@@ -73,3 +73,6 @@ const routes = [
 ];
 
 export default routes;
+
+import { createHashRouter } from "react-router";
+export const router = createHashRouter(routes);

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { useDispatch } from "react-redux";
 import { cartApi } from "../apis";
@@ -11,7 +11,7 @@ export default function Cart() {
     const [cart, setCart] = useState({ carts: [], total: 0, final_total: 0 });
     const [loading, setLoading] = useState(false);
 
-    const getCart = async () => {
+    const getCart = useCallback(async () => {
         try {
             const response = await cartApi.get();
             if (response.data.success) {
@@ -21,7 +21,7 @@ export default function Cart() {
         } catch (err) {
             console.error("Error fetching cart:", err);
         }
-    };
+    }, [dispatch]);
 
     const updateQty = async (cartItem, qty) => {
         if (qty < 1) return;
@@ -63,7 +63,7 @@ export default function Cart() {
     useEffect(() => {
         scrollToTop();
         getCart();
-    }, []);
+    }, [getCart]);
 
     const isEmpty = !cart.carts || cart.carts.length === 0;
 

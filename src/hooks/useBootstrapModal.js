@@ -1,29 +1,27 @@
+import { useRef, useEffect } from "react";
+import * as bootstrap from "bootstrap";
+
 const useBsModal = () => {
     const modalRef = useRef(null);
     const modalInstance = useRef(null);
 
     useEffect(() => {
-        if (modalRef.current) {
-            modalInstance.current = new bootstrap.Modal(modalRef.current);
+        const modalEl = modalRef.current;
+        if (modalEl) {
+            modalInstance.current = new bootstrap.Modal(modalEl);
         }
         const handleBSHideIssue = () => {
             if (document.activeElement instanceof HTMLElement) {
                 document.activeElement.blur();
             }
         };
-
-        console.log("Modal 初始化:", modalInstance.current);
-        modalRef.current.addEventListener("hide.bs.modal", handleBSHideIssue);
+        modalEl.addEventListener("hide.bs.modal", handleBSHideIssue);
 
         return () => {
-            modalRef.current.removeEventListener(
-                "hide.bs.modal",
-                handleBSHideIssue,
-            );
+            modalEl.removeEventListener("hide.bs.modal", handleBSHideIssue);
             if (modalInstance.current) {
-                modalInstance.current?.dispose();
-                modalInstance.current = null; // 確保不再使用已經 dispose 的實例
-                console.log("modal 銷毀");
+                modalInstance.current.dispose();
+                modalInstance.current = null;
             }
         };
     }, []);

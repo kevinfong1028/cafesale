@@ -38,18 +38,6 @@ export default function AdminProducts() {
     };
     const [pagination, setPagination] = useState(pagiObj);
 
-    const getAllProducts = async (pageNum) => {
-        try {
-            const response = await adminProductApi.getAll();
-            console.log("get all", response);
-            if(response.data.success){
-                setProductTotal(response.data.products.length);
-            }
-        } catch (error) {
-            console.error("Error fetching admin products:", error);
-        }
-    };
-
     const getProducts = async (pageNum) => {
         try {
             const response = await adminProductApi.getByPage({
@@ -65,6 +53,16 @@ export default function AdminProducts() {
     };
 
     useEffect(() => {
+        const getAllProducts = async () => {
+            try {
+                const response = await adminProductApi.getAll();
+                if (response.data.success) {
+                    setProductTotal(response.data.products.length);
+                }
+            } catch (error) {
+                console.error("Error fetching admin products:", error);
+            }
+        };
         getProducts();
         getAllProducts();
     }, []);
